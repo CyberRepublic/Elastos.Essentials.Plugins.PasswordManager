@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pwm_prompt_title">请输入您的主密码</string>
+    <string name="pwm_prompt_subtitle">需要输入您的主密码才能继续</string>
+    <string name="pwm_prompt_wrong_password">密码错误，请重新输入</string>
+    <string name="pwm_prompt_use_biometric_auth">使用生物特征认证</string>
+    <string name="pwm_prompt_continue_with_biometry">继续使用指纹或面部识别进行身份验证</string>
+    <string name="pwm_prompt_cancel">取消</string>
+    <string name="pwm_prompt_next">下一步</string>
+
+    <string name="pwm_create_title">请创建您的主密码</string>
+    <string name="pwm_create_subtitle">您的主密码会将所有应用的密码保存在安全的地方。</string>
+    <string name="pwm_create_enter_passwod">输入密码</string>
+    <string name="pwm_create_repeat_password">请再次输入密码</string>
+    <string name="pwm_create_no_match">密码不一致</string>
+    <string name="pwm_create_cancel">取消</string>
+    <string name="pwm_create_create">创建</string>
+
+    <string name="api_perm_title">该胶囊要求使用敏感功能</string>
+    <string name="api_perm_feature">功能:</string>
+    <string name="api_perm_description">胶囊通过此功能能做什么?</string>
+    <string name="api_perm_risk_low">低风险</string>
+    <string name="api_perm_risk_average">中等风险</string>
+    <string name="api_perm_risk_high">潜在危害</string>
+    <string name="api_perm_deny">拒绝</string>
+    <string name="api_perm_accept">同意</string>
+
+    <string name="url_perm_title">请求URL访问</string>
+    <string name="url_perm_subtitle">这个胶囊想要访问elastOS外部的一个地址。 您同意吗?</string>
+    <string name="url_perm_capsule">胶囊:</string>
+    <string name="url_perm_address">地址:</string>
+
+    <string name="intent_choose_title">打开方式:</string>
+    <string name="intent_choose_another">其它应用</string>
+
+    <string name="app_starting">正在启动</string>
+
+    <string name="notification_contact_added">联系人已添加</string>
+    <string name="notification_contact_request">联系人请求</string>
+    <string name="notification_contact_invitation_accepted">添加联系人邀请已被接受</string>
+    <string name="notification_name_was_added_new">刚刚被添加为新联系人。点击可查看他/她的个人资料。</string>
+    <string name="notification_someone_was_added_new">有新的联系人。 点击可查看他/她的个人资料。</string>
+    <string name="notification_name_want_add">想加您为联系人。点击可查看更多详细信息。</string>
+    <string name="notification_someone_want_add">有人想将您添加为联系人。 点击可查看更多详细信息。</string>
+    <string name="notification_name_accept_invitation">接受了您的邀请。 点击可查看详细信息。</string>
+    <string name="notification_someone_accept_invitation">您的朋友接受了您的邀请。 点击可查看详细信息。</string>
+
+</resources>

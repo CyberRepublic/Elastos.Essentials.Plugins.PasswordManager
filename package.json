@@ -1,0 +1,36 @@
+{
+    "name": "elastos-essentials-plugins-passwordmanager",
+    "version": "1.0.0",
+    "description": "Elastos Essentials PasswordManager Plugin",
+    "cordova": {
+      "id": "elastos-essentials-plugins-passwordmanager",
+      "platforms": [
+        "android",
+        "ios"
+      ]
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/elastos/Elastos.Essentials.Plugins.PasswordManager.git"
+    },
+    "keywords": [
+      "cordova",
+      "passwordmanager",
+      "trinity",
+      "essentials",
+      "elastos",
+      "ecosystem:cordova",
+      "cordova-android",
+      "cordova-ios",
+      "cordova-browser"
+    ],
+    "author": "elastos team",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/elastos/Elastos.Essentials.Plugins.PasswordManager/issues"
+    },
+    "homepage": "https://github.com/elastos/Elastos.Essentials.Plugins.PasswordManager#readme",
+    "scripts": {
+      "gen-docs": "jsdoc2md www/passwordmanager.js > README.md"
+    }
+  }

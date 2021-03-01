@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="elastos-essentials-plugins-passwordmanager" version="1.0.0"
+    xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>PasswordManager</name>
+
+    <dependency id="elastos-essentials-plugins-fingerprint" url="https://github.com/elastos/Elastos.Essentials.Plugins.Fingerprint" subdir="fingerprint" />
+
+    <js-module name="PasswordManagerPlugin" src="www/PasswordManager.js">
+        <clobbers target="passwordManager" />
+    </js-module>
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="PasswordManagerPlugin">
+                <param name="android-package" value="org.elastos.essentials.plugins.passwordmanager.PasswordManagerPlugin" />
+            </feature>
+        </config-file>
+        <source-file src="src/android/AppsPasswordStrategy.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager" />
+        <source-file src="src/android/FakeR.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager" />
+        <source-file src="src/android/PasswordCreationOptions.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager" />
+        <source-file src="src/android/PasswordDatabaseInfo.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager" />
+        <source-file src="src/android/PasswordGetInfoOptions.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager" />
+        <source-file src="src/android/PasswordInfoBuilder.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager" />
+        <source-file src="src/android/PasswordManager.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager" />
+        <source-file src="src/android/PasswordManagerPlugin.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager" />
+        <source-file src="src/android/PasswordType.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager" />
+        <source-file src="src/android/PasswordUnlockMode.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager" />
+        <source-file src="src/android/UIStyling.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager" />
+        <source-file src="src/android/dialogs/MasterPasswordCreator.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager/dialogs" />
+        <source-file src="src/android/dialogs/MasterPasswordPrompter.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager/dialogs" />
+        <source-file src="src/android/passwordinfo/AccountPasswordInfo.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager/passwordinfo" />
+        <source-file src="src/android/passwordinfo/BankAccountPasswordInfo.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager/passwordinfo" />
+        <source-file src="src/android/passwordinfo/BankCardPasswordInfo.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager/passwordinfo" />
+        <source-file src="src/android/passwordinfo/BankCardType.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager/passwordinfo" />
+        <source-file src="src/android/passwordinfo/GenericPasswordInfo.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager/passwordinfo" />
+        <source-file src="src/android/passwordinfo/PasswordInfo.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager/passwordinfo" />
+        <source-file src="src/android/passwordinfo/WifiPasswordInfo.java" target-dir="src/org/elastos/essentials/plugins/passwordmanager/passwordinfo" />
+
+        <resource-file src="src/android/res/layout/dialog_password_manager_create.xml" target="res/layout/dialog_password_manager_create.xml"/>
+        <resource-file src="src/android/res/layout/dialog_password_manager_prompt.xml" target="res/layout/dialog_password_manager_prompt.xml"/>
+        <resource-file src="src/android/res/values/i18n.xml" target="res/values/i18n.xml"/>
+        <resource-file src="src/android/res/values-fr/i18n.xml" target="res/values-fr/i18n.xml"/>
+        <resource-file src="src/android/res/values-zh/i18n.xml" target="res/values-zh/i18n.xml"/>
+        <resource-file src="src/android/res/drawable/ic_lock.png" target="res/drawable/ic_lock.png"/>
+
+        <framework src="src/android/passwordmanager.gradle" custom="true" type="gradleReference"/>
+    </platform>
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="PasswordManagerPlugin">
+                <param name="ios-package" value="PasswordManagerPlugin" />
+            </feature>
+        </config-file>
+    </platform>
+    <!-- <platform name="electron">
+        <js-module src="src/electron/PasswordManagerPluginProxy.js" name="PasswordManagerPluginProxy">
+            <runs />
+        </js-module>
+    </platform> -->
+</plugin>
