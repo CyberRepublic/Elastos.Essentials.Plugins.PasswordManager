@@ -20,7 +20,7 @@ import androidx.cardview.widget.CardView;
 import org.elastos.essentials.plugins.passwordmanager.FakeR;
 import org.elastos.essentials.plugins.passwordmanager.PasswordManager;
 import org.elastos.essentials.plugins.passwordmanager.UIStyling;
-import org.elastos.trinity.plugins.fingerprint.FingerPrintAuthHelper;
+import org.elastos.essentials.plugins.fingerprint.FingerPrintAuthHelper;
 
 public class MasterPasswordPrompter extends AlertDialog {
     public interface OnCancelClickedListener {

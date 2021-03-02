@@ -10,7 +10,7 @@ import android.util.Log;
 import org.elastos.essentials.plugins.passwordmanager.dialogs.MasterPasswordCreator;
 import org.elastos.essentials.plugins.passwordmanager.dialogs.MasterPasswordPrompter;
 import org.elastos.essentials.plugins.passwordmanager.passwordinfo.PasswordInfo;
-import org.elastos.trinity.plugins.fingerprint.FingerPrintAuthHelper;
+import org.elastos.essentials.plugins.fingerprint.FingerPrintAuthHelper;
 import org.json.JSONException;
 
 import java.io.File;
