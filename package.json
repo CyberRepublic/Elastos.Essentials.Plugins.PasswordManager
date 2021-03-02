@@ -32,5 +32,6 @@
     "homepage": "https://github.com/elastos/Elastos.Essentials.Plugins.PasswordManager#readme",
     "scripts": {
       "gen-docs": "jsdoc2md www/passwordmanager.js > README.md"
-    }
+    },
+    "types": "./www/types.d.ts"
   }

@@ -41,8 +41,6 @@ public class PasswordManager {
     private static final String LOG_TAG = "PWDManager";
     private static final String SHARED_PREFS_KEY = "PWDMANAGERPREFS";
     private static final String PASSWORD_MANAGER_APP_ID = "org.elastos.essentials.dapp.passwordmanager";
-    private static final String DID_APPLICATION_APP_ID = "org.elastos.essentials.dapp.did";
-    private static final String DID_SESSION_APPLICATION_APP_ID = "org.elastos.essentials.dapp.didsession";
 
     public static final String FAKE_PASSWORD_MANAGER_PLUGIN_APP_ID = "fakemasterpasswordpluginappid";
     public static final String MASTER_PASSWORD_BIOMETRIC_KEY = "masterpasswordkey";
@@ -97,13 +95,15 @@ public class PasswordManager {
         void onPasswordInfoSet();
     }
 
-    public PasswordManager() {
-//        this.activity = this.cordova.getActivity();
+    public PasswordManager(Activity activity) {
+        this.activity = activity;
     }
 
-    public static PasswordManager getSharedInstance() {
+    public static PasswordManager getSharedInstance(Activity activity) {
         if (PasswordManager.instance == null) {
-            PasswordManager.instance = new PasswordManager();
+            // TODO get the dark mode
+            UIStyling.prepare(false);
+            PasswordManager.instance = new PasswordManager(activity);
         }
         return PasswordManager.instance;
     }
@@ -490,11 +490,7 @@ public class PasswordManager {
     }
 
     private String getActualAppID(String baseAppID) {
-        // Share the same appid for did session and did apps, to be able to share passwords. Use a real app id, not a random
-        // string, for security reasons.
-        if (baseAppID.equals(DID_SESSION_APPLICATION_APP_ID)) {
-            return DID_APPLICATION_APP_ID;
-        }
+        // TODO remove ?
         return baseAppID;
     }
 

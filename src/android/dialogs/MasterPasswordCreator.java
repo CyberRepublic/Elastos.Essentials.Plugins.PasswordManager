@@ -3,17 +3,12 @@ package org.elastos.essentials.plugins.passwordmanager.dialogs;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Build;
-import android.os.CancellationSignal;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -90,7 +85,7 @@ public class MasterPasswordCreator extends AlertDialog {
         }
 
         public void prompt() {
-            //TODO
+            // TODO how to get the localizedContext?
 //            Context localizedContext = PreferenceManager.getShareInstance().getLocalizedContext(activity);
             View view = LayoutInflater.from(this.activity).inflate(fakeR.getId("layout", "dialog_password_manager_create"), null);
 
