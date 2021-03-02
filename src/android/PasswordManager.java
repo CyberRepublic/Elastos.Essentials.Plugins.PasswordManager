@@ -101,8 +101,6 @@ public class PasswordManager {
 
     public static PasswordManager getSharedInstance(Activity activity) {
         if (PasswordManager.instance == null) {
-            // TODO get the dark mode
-            UIStyling.prepare(false);
             PasswordManager.instance = new PasswordManager(activity);
         }
         return PasswordManager.instance;

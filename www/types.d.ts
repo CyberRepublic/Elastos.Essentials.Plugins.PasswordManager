@@ -21,9 +21,9 @@
 */
 
 /**
-* This plugin allows dApps to save and retrieve user passwords securely. Passwords are saved using a 
-* master user password. 
-* 
+* This plugin allows dApps to save and retrieve user passwords securely. Passwords are saved using a
+* master user password.
+*
 * Passwords are sandboxed with different master passwords for each DID session.
 *
 * This plugin also provide UI helpers to create or input passwords, in case dApps don't want to manage
@@ -78,7 +78,7 @@ declare namespace PasswordManagerPlugin {
         type: PasswordType;
 
         /**
-         * Name used while displaying this info. Either set by users in the password manager app 
+         * Name used while displaying this info. Either set by users in the password manager app
          * or by apps, when saving passwords automatically.
          */
         displayName: string;
@@ -196,7 +196,7 @@ declare namespace PasswordManagerPlugin {
     }
 
     type GetPasswordInfoOptions = {
-        /** 
+        /**
          * If true, the master password is asked (popup) in case the database is locked. If false,
          * getPasswordInfo() fails silently and throws a cancellation exception. Default: true.
          */
@@ -204,7 +204,7 @@ declare namespace PasswordManagerPlugin {
 
         /**
          * Forces the user to re-enter his master password for the current operation, even if the database
-         * is already unlocked. This is useful for security reasons, for example for payments, when we want to 
+         * is already unlocked. This is useful for security reasons, for example for payments, when we want to
          * confirm that the acting user is really the device owner.
          * Default: false.
          */
@@ -228,28 +228,28 @@ declare namespace PasswordManagerPlugin {
          * Saves or updates a password information into the secure database.
          * The passwordInfo's key field is checked to match existing content. Existing content
          * is overwritten.
-         * 
+         *
          * Password info could fail to be saved in case user cancels the master password creation or enters
          * a wrong master password then cancels.
-         * 
+         *
          * @returns True if the password info was saved, false otherwise.
          */
         setPasswordInfo(info: PasswordInfo): Promise<BooleanWithReason>;
 
         /**
          * Using a key identifier, returns a previously saved password info.
-         * 
+         *
          * @param key Unique key identifying the password info to retrieve.
-         * 
+         *
          * @returns The password info, or null if nothing was found.
          */
         getPasswordInfo(key: string, options?: GetPasswordInfoOptions): Promise<PasswordInfo>;
 
         /**
          * Deletes an existing password information from the secure database.
-         * 
+         *
          * @param key Unique identifier for the password info to delete.
-         * 
+         *
          * @returns True if something could be deleted, false otherwise.
          */
         deletePasswordInfo(key: string): Promise<BooleanWithReason>;
@@ -257,28 +257,28 @@ declare namespace PasswordManagerPlugin {
         /**
          * Convenience method to generate a random password based on given criteria (options).
          * Used by applications to quickly generate new user passwords.
-         * 
-         * @param options 
+         *
+         * @param options
          */
         generateRandomPassword(options?: PasswordCreationOptions): Promise<string>;
 
         /**
          * RESTRICTED
-         * 
+         *
          * Sets the new master password for the current DID session. This master password locks the whole
          * database of password information.
-         * 
+         *
          * In case of a master password change, the password info database is re-encrypted with this new password.
-         * 
+         *
          * Only the password manager application is allowed to call this API.
-         * 
+         *
          * @returns True if the master password was successfully changed, false otherwise.
          */
         changeMasterPassword(): Promise<BooleanWithReason>;
-        
+
         /**
          * RESTRICTED
-         * 
+         *
          * If the master password has ben unlocked earlier, all passwords are accessible for a while.
          * This API re-locks the passwords database and further requests from applications to this password
          * manager will require user to provide his master password again.
@@ -287,61 +287,73 @@ declare namespace PasswordManagerPlugin {
 
         /**
          * RESTRICTED
-         * 
+         *
          * Deletes all password information for the active DID session. The encrypted passwords database
          * is deleted without any way to recover it.
          */
         deleteAll(): Promise<void>;
 
         /**
-         * RESTRICTED 
-         * 
+         * RESTRICTED
+         *
          * Sets the unlock strategy for the password info database. By default, once the master password
          * if provided once by the user, the whole database is unlocked for a while, until elastOS exits,
          * or if one hour has passed, or if it's manually locked again.
-         * 
+         *
          * For increased security, user can choose to get prompted for the master password every time using
          * this API.
-         * 
+         *
          * This API can be called only by the password manager application.
-         * 
+         *
          * @param mode Unlock strategy to use.
          */
         setUnlockMode(mode: PasswordUnlockMode);
 
         /**
          * RESTRICTED
-         * 
+         *
          * Returns the whole list of password information contained in the password database.
-         * 
+         *
          * Only the password manager application is allowed to call this API.
-         * 
+         *
          * @returns The list of existing password information.
          */
         getAllPasswordInfo(): Promise<PasswordInfo[]>;
-        
+
         /**
-         * RESTRICTED 
-         * 
+         * RESTRICTED
+         *
          * Deletes an existing password information from the secure database, for a given application.
-         * 
+         *
          * Only the password manager application can call this api.
-         * 
+         *
          * @param key Unique identifier for the password info to delete.
-         * 
+         *
          * @returns True if something could be deleted, false otherwise.
          */
         deleteAppPasswordInfo(targetAppId: string, key: string): Promise<BooleanWithReason>;
 
         /**
          * RESTRICTED
-         * 
+         *
          * Used by the DID session application to toggle DID contexts and deal with DID creation, sign in,
          * sign out. When a virtual context is set, api call such as getPasswordInfo() don't use the currently
          * signed in DID, but they use this virtual DID instead.
-         * 
+         *
          * @param didString The DID context to use for all further api calls. Pass null to clear the virtual context.
          */
         setVirtualDIDContext(didString: string): Promise<void>;
+
+        /**
+         * Set the theme mode.
+         * @param useDarkMode True if use the dark mode theme, false use the light mode theme.
+         */
+        setDarkMode(useDarkMode: Boolean): Promise<void>;
+
+        /**
+         * Set the language.
+         * @param language The language for the dialog.
+         */
+        setLanguage(language: string): Promise<void>;
     }
 }

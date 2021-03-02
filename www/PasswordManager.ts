@@ -163,6 +163,28 @@ class PasswordManagerImpl implements PasswordManagerPlugin.PasswordManager {
         });
     }
 
+    setDarkMode(useDarkMode: boolean): Promise<void> {
+        return new Promise((resolve, reject)=>{
+            exec(()=>{
+                resolve();
+            }, (err)=>{
+                console.error("Error while calling PasswordManagerPlugin.setDarkMode()", err);
+                reject(this.nativeToTSException(err));
+            }, 'PasswordManagerPlugin', 'setDarkMode', [useDarkMode]);
+        });
+    }
+
+    setLanguage(language: string): Promise<void> {
+        return new Promise((resolve, reject)=>{
+            exec(()=>{
+                resolve();
+            }, (err)=>{
+                console.error("Error while calling PasswordManagerPlugin.setLanguage()", err);
+                reject(this.nativeToTSException(err));
+            }, 'PasswordManagerPlugin', 'setLanguage', [language]);
+        });
+    }
+
     /**
      * Tries to convert a native error into a better TS error type for app convenience.
      */

@@ -90,8 +90,6 @@ public class MasterPasswordPrompter extends AlertDialog {
         }
 
         public Builder prompt(boolean passwordWasWrong) {
-            // TODO how to get the localized Context?
-//            Context localizedContext = PreferenceManager.getShareInstance().getLocalizedContext(activity);
             View view = LayoutInflater.from(this.activity).inflate(fakeR.getId("layout", "dialog_password_manager_prompt"), null);
 
             // Hook UI items

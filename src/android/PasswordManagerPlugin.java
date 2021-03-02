@@ -22,8 +22,13 @@
 
 package org.elastos.essentials.plugins.passwordmanager;
 
+import android.app.Activity;
+import android.content.res.Configuration;
+
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
 import org.elastos.essentials.plugins.passwordmanager.passwordinfo.PasswordInfo;
 import org.json.JSONArray;
@@ -31,12 +36,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class PasswordManagerPlugin extends CordovaPlugin {
     private static final int NATIVE_ERROR_CODE_INVALID_PASSWORD = -1;
     private static final int NATIVE_ERROR_CODE_INVALID_PARAMETER = -2;
     private static final int NATIVE_ERROR_CODE_CANCELLED = -3;
     private static final int NATIVE_ERROR_CODE_UNSPECIFIED = -4;
+
+    private Activity activity;
 
     public class BooleanWithReason {
         public boolean value;
@@ -46,6 +54,13 @@ public class PasswordManagerPlugin extends CordovaPlugin {
             this.value = value;
             this.reason = reason;
         }
+    }
+
+    @Override
+    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+        super.initialize(cordova, webView);
+
+        this.activity = this.cordova.getActivity();
     }
 
     @Override
@@ -84,6 +99,12 @@ public class PasswordManagerPlugin extends CordovaPlugin {
                     break;
                 case "setVirtualDIDContext":
                     this.setVirtualDIDContext(args, callbackContext);
+                    break;
+                case "setDarkMode":
+                    this.setDarkMode(args, callbackContext);
+                    break;
+                case "setLanguage":
+                    this.setLanguage(args, callbackContext);
                     break;
                 default:
                     return false;
@@ -144,7 +165,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
         }
 
         JSONObject result = new JSONObject();
-        PasswordManager.getSharedInstance(this.cordova.getActivity()).setPasswordInfo(passwordInfo, "", "", new PasswordManager.OnPasswordInfoSetListener(){
+        PasswordManager.getSharedInstance(this.activity).setPasswordInfo(passwordInfo, "", "", new PasswordManager.OnPasswordInfoSetListener(){
             @Override
             public void onPasswordInfoSet() {
                 try {
@@ -185,7 +206,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
         }
 
         JSONObject result = new JSONObject();
-        PasswordManager.getSharedInstance(this.cordova.getActivity()).getPasswordInfo(key, "", "", options, new PasswordManager.OnPasswordInfoRetrievedListener() {
+        PasswordManager.getSharedInstance(this.activity).getPasswordInfo(key, "", "", options, new PasswordManager.OnPasswordInfoRetrievedListener() {
             @Override
             public void onPasswordInfoRetrieved(PasswordInfo info) {
                 try {
@@ -212,7 +233,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
 
     private void getAllPasswordInfo(JSONArray args, CallbackContext callbackContext) throws Exception {
         JSONObject result = new JSONObject();
-        PasswordManager.getSharedInstance(this.cordova.getActivity()).getAllPasswordInfo("", "", new PasswordManager.OnAllPasswordInfoRetrievedListener() {
+        PasswordManager.getSharedInstance(this.activity).getAllPasswordInfo("", "", new PasswordManager.OnAllPasswordInfoRetrievedListener() {
             @Override
             public void onAllPasswordInfoRetrieved(ArrayList<PasswordInfo> infos) {
                 try {
@@ -246,7 +267,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
         String key = args.getString(0);
 
         JSONObject result = new JSONObject();
-        PasswordManager.getSharedInstance(this.cordova.getActivity()).deletePasswordInfo(key, "", "", "", new PasswordManager.OnPasswordInfoDeletedListener() {
+        PasswordManager.getSharedInstance(this.activity).deletePasswordInfo(key, "", "", "", new PasswordManager.OnPasswordInfoDeletedListener() {
             @Override
             public void onPasswordInfoDeleted() {
                 try {
@@ -273,7 +294,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
         String key = args.getString(1);
 
         JSONObject result = new JSONObject();
-        PasswordManager.getSharedInstance(this.cordova.getActivity()).deletePasswordInfo(key, "", "", targetAppID, new PasswordManager.OnPasswordInfoDeletedListener() {
+        PasswordManager.getSharedInstance(this.activity).deletePasswordInfo(key, "", "", targetAppID, new PasswordManager.OnPasswordInfoDeletedListener() {
             @Override
             public void onPasswordInfoDeleted() {
                 try {
@@ -298,7 +319,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
     private void generateRandomPassword(JSONArray args, CallbackContext callbackContext) throws Exception {
         JSONObject options = args.isNull(0) ? null : args.getJSONObject(0); // Currently unused
 
-        String password = PasswordManager.getSharedInstance(this.cordova.getActivity()).generateRandomPassword(null);
+        String password = PasswordManager.getSharedInstance(this.activity).generateRandomPassword(null);
 
         JSONObject result = new JSONObject();
         result.put("generatedPassword", password);
@@ -309,7 +330,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
     private void changeMasterPassword(JSONArray args, CallbackContext callbackContext) throws Exception {
         JSONObject result = new JSONObject();
 
-        PasswordManager.getSharedInstance(this.cordova.getActivity()).changeMasterPassword("", "", new PasswordManager.OnMasterPasswordChangeListener() {
+        PasswordManager.getSharedInstance(this.activity).changeMasterPassword("", "", new PasswordManager.OnMasterPasswordChangeListener() {
             @Override
             public void onMasterPasswordChanged() {
                 try {
@@ -332,7 +353,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
     }
 
     private void lockMasterPassword(JSONArray args, CallbackContext callbackContext) throws Exception {
-        PasswordManager.getSharedInstance(this.cordova.getActivity()).lockMasterPassword("");
+        PasswordManager.getSharedInstance(this.activity).lockMasterPassword("");
 
         JSONObject result = new JSONObject();
 
@@ -340,7 +361,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
     }
 
     private void deleteAll(JSONArray args, CallbackContext callbackContext) throws Exception {
-        PasswordManager.getSharedInstance(this.cordova.getActivity()).deleteAll("");
+        PasswordManager.getSharedInstance(this.activity).deleteAll("");
 
         JSONObject result = new JSONObject();
 
@@ -352,7 +373,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
 
         PasswordUnlockMode unlockMode = PasswordUnlockMode.fromValue(unlockModeAsInt);
 
-        PasswordManager.getSharedInstance(this.cordova.getActivity()).setUnlockMode(unlockMode, "", "");
+        PasswordManager.getSharedInstance(this.activity).setUnlockMode(unlockMode, "", "");
 
         JSONObject result = new JSONObject();
         sendSuccess(callbackContext, result);
@@ -361,7 +382,29 @@ public class PasswordManagerPlugin extends CordovaPlugin {
     private void setVirtualDIDContext(JSONArray args, CallbackContext callbackContext) throws Exception {
         String virtualDIDStringContext = args.isNull(0) ? null : args.getString(0);
 
-        PasswordManager.getSharedInstance(this.cordova.getActivity()).setVirtualDIDContext(virtualDIDStringContext);
+        PasswordManager.getSharedInstance(this.activity).setVirtualDIDContext(virtualDIDStringContext);
+
+        JSONObject result = new JSONObject();
+        sendSuccess(callbackContext, result);
+    }
+
+    private void setDarkMode(JSONArray args, CallbackContext callbackContext) throws Exception {
+        boolean useDarkMode = args.isNull(0) ? null : args.getBoolean(0);
+
+        UIStyling.prepare(useDarkMode);
+
+        JSONObject result = new JSONObject();
+        sendSuccess(callbackContext, result);
+    }
+
+    private void setLanguage(JSONArray args, CallbackContext callbackContext) throws Exception {
+        String language = args.isNull(0) ? null : args.getString(0);
+
+        Configuration config = this.activity.getResources().getConfiguration();
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        config.locale = locale;
+        this.activity.getResources().updateConfiguration(config, this.activity.getResources().getDisplayMetrics());
 
         JSONObject result = new JSONObject();
         sendSuccess(callbackContext, result);

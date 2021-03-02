@@ -85,8 +85,6 @@ public class MasterPasswordCreator extends AlertDialog {
         }
 
         public void prompt() {
-            // TODO how to get the localizedContext?
-//            Context localizedContext = PreferenceManager.getShareInstance().getLocalizedContext(activity);
             View view = LayoutInflater.from(this.activity).inflate(fakeR.getId("layout", "dialog_password_manager_create"), null);
 
             // Hook UI items
