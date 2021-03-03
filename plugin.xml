@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="elastos-essentials-plugins-passwordmanager" version="1.0.0"
+<plugin id="elastos-essentials-plugin-passwordmanager" version="1.0.0"
     xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <name>PasswordManager</name>
 
-    <dependency id="elastos-essentials-plugins-fingerprint" url="https://github.com/elastos/Elastos.Essentials.Plugins.Fingerprint" subdir="fingerprint" />
+    <dependency id="elastos-essentials-plugin-fingerprint" url="https://github.com/elastos/Elastos.Essentials.Plugins.Fingerprint" subdir="fingerprint" />
 
     <js-module name="PasswordManagerPlugin" src="www/PasswordManager.js">
         <clobbers target="passwordManager" />

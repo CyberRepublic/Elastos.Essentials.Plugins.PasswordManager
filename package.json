@@ -1,9 +1,9 @@
 {
-    "name": "elastos-essentials-plugins-passwordmanager",
+    "name": "elastos-essentials-plugin-passwordmanager",
     "version": "1.0.0",
     "description": "Elastos Essentials PasswordManager Plugin",
     "cordova": {
-      "id": "elastos-essentials-plugins-passwordmanager",
+      "id": "elastos-essentials-plugin-passwordmanager",
       "platforms": [
         "android",
         "ios"
