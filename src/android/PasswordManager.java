@@ -52,6 +52,7 @@ public class PasswordManager {
     private static PasswordManager instance;
     private HashMap<String, PasswordDatabaseInfo> databasesInfo = new HashMap<>();
     private String virtualDIDContext = null;
+    private String did = null;
     private MasterPasswordPrompter.Builder activeMasterPasswordPrompt = null;
 
     private interface BasePasswordManagerListener {
@@ -473,17 +474,22 @@ public class PasswordManager {
         this.virtualDIDContext = didString;
     }
 
+    public void setDID(String didString) {
+        this.did = didString;
+    }
+
     private String getActualDIDContext(String currentDIDContext) throws Exception {
         if (virtualDIDContext != null) {
             return virtualDIDContext;
         }
+        else if (currentDIDContext != null) {
+            return currentDIDContext;
+        }
+        else if (did != null ) {
+            return did;
+        }
         else {
-            if (currentDIDContext != null) {
-                return currentDIDContext;
-            }
-            else {
-                throw new Exception("No signed in DID or virtual DID context exist. Need at least one of them!");
-            }
+            throw new Exception("No signed in DID or virtual DID context exist. Need at least one of them!");
         }
     }
 
@@ -774,9 +780,10 @@ public class PasswordManager {
     }
 
     private void setPasswordInfoReal(PasswordInfo info, String did, String appID) throws Exception {
-        PasswordDatabaseInfo dbInfo = databasesInfo.get(did);
+        String actualDID = getActualDIDContext(did);
+        PasswordDatabaseInfo dbInfo = databasesInfo.get(actualDID);
         dbInfo.setPasswordInfo(appID, info);
-        encryptAndSaveDatabase(did, dbInfo.activeMasterPassword);
+        encryptAndSaveDatabase(actualDID, dbInfo.activeMasterPassword);
     }
 
     private PasswordInfo getPasswordInfoReal(String key, String did, String appID) throws Exception {

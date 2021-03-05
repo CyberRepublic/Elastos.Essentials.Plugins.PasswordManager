@@ -163,6 +163,17 @@ class PasswordManagerImpl implements PasswordManagerPlugin.PasswordManager {
         });
     }
 
+    setCurrentDID(did: string): Promise<void> {
+        return new Promise((resolve, reject)=>{
+            exec(()=>{
+                resolve();
+            }, (err)=>{
+                console.error("Error while calling PasswordManagerPlugin.setCurrentDID()", err);
+                reject(this.nativeToTSException(err));
+            }, 'PasswordManagerPlugin', 'setCurrentDID', [did]);
+        });
+    }
+
     setDarkMode(useDarkMode: boolean): Promise<void> {
         return new Promise((resolve, reject)=>{
             exec(()=>{

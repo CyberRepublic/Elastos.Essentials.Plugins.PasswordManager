@@ -345,6 +345,12 @@ declare namespace PasswordManagerPlugin {
         setVirtualDIDContext(didString: string): Promise<void>;
 
         /**
+         * Set the current did.
+         * @param did
+         */
+        setCurrentDID(did: string): Promise<void>;
+
+        /**
          * Set the theme mode.
          * @param useDarkMode True if use the dark mode theme, false use the light mode theme.
          */
