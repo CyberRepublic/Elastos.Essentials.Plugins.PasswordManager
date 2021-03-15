@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.CancellationSignal;
 import android.util.Log;
 
+import org.apache.cordova.CordovaPlugin;
 import org.elastos.essentials.plugins.passwordmanager.dialogs.MasterPasswordCreator;
 import org.elastos.essentials.plugins.passwordmanager.dialogs.MasterPasswordPrompter;
 import org.elastos.essentials.plugins.passwordmanager.passwordinfo.PasswordInfo;
@@ -49,11 +50,13 @@ public class PasswordManager {
     private static final String PREF_KEY_APPS_PASSWORD_STRATEGY = "appspasswordstrategy";
 
     private Activity activity;
+    private final CordovaPlugin cordovaPlugin;
     private static PasswordManager instance;
     private HashMap<String, PasswordDatabaseInfo> databasesInfo = new HashMap<>();
     private String virtualDIDContext = null;
     private String did = null;
     private MasterPasswordPrompter.Builder activeMasterPasswordPrompt = null;
+    private FingerPrintAuthHelper fingerPrintAuthHelper = null;
 
     private interface BasePasswordManagerListener {
         void onCancel();
@@ -96,13 +99,14 @@ public class PasswordManager {
         void onPasswordInfoSet();
     }
 
-    public PasswordManager(Activity activity) {
-        this.activity = activity;
+    public PasswordManager(CordovaPlugin cordovaPlugin) {
+        this.cordovaPlugin = cordovaPlugin;
+        this.activity = cordovaPlugin.cordova.getActivity();
     }
 
-    public static PasswordManager getSharedInstance(Activity activity) {
+    public static PasswordManager getSharedInstance(CordovaPlugin cordovaPlugin) {
         if (PasswordManager.instance == null) {
-            PasswordManager.instance = new PasswordManager(activity);
+            PasswordManager.instance = new PasswordManager(cordovaPlugin);
         }
         return PasswordManager.instance;
     }
@@ -522,7 +526,7 @@ public class PasswordManager {
                     activeMasterPasswordPrompt = null;
                 }
 
-                activeMasterPasswordPrompt = new MasterPasswordPrompter.Builder(activity, did, this)
+                activeMasterPasswordPrompt = new MasterPasswordPrompter.Builder(cordovaPlugin, did, this)
                         .setOnNextClickedListener((password, shouldSavePasswordToBiometric) -> {
                             activeMasterPasswordPrompt = null;
                             try {
@@ -537,11 +541,11 @@ public class PasswordManager {
                                     if (shouldSavePasswordToBiometric) {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                             activity.runOnUiThread(() -> {
-                                                FingerPrintAuthHelper fingerPrintAuthHelper = new FingerPrintAuthHelper(activity, did, FAKE_PASSWORD_MANAGER_PLUGIN_APP_ID);
+                                                fingerPrintAuthHelper = new FingerPrintAuthHelper(this.cordovaPlugin, did);
                                                 fingerPrintAuthHelper.init();
-                                                fingerPrintAuthHelper.authenticateAndSavePassword(MASTER_PASSWORD_BIOMETRIC_KEY, password, new CancellationSignal(), new FingerPrintAuthHelper.SimpleAuthenticationCallback() {
+                                                fingerPrintAuthHelper.authenticateAndSavePassword(MASTER_PASSWORD_BIOMETRIC_KEY, password, new FingerPrintAuthHelper.AuthenticationCallback() {
                                                     @Override
-                                                    public void onSuccess() {
+                                                    public void onSuccess(String password) {
                                                         // Save user's choice to use biometric auth method next time
                                                         setBiometricAuthEnabled(did, true);
 
@@ -555,10 +559,6 @@ public class PasswordManager {
                                                         Log.e(LOG_TAG, "Biometric authentication failed to initiate");
                                                         Log.e(LOG_TAG, message);
                                                         listener.onDatabaseLoaded();
-                                                    }
-
-                                                    @Override
-                                                    public void onHelp(int helpCode, String helpString) {
                                                     }
                                                 });
                                             });
@@ -843,5 +843,13 @@ public class PasswordManager {
 
     public void setBiometricAuthEnabled(String did, boolean useBiometricAuth) {
         getPrefs(did).edit().putBoolean("biometricauth", useBiometricAuth).apply();
+    }
+
+    public FingerPrintAuthHelper getFingerPrintAuthHelper() {
+        if (activeMasterPasswordPrompt != null) {
+            return activeMasterPasswordPrompt.getFingerPrintAuthHelper();
+        } else {
+            return fingerPrintAuthHelper;
+        }
     }
 }

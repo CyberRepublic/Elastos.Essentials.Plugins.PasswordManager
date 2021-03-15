@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.biometric.BiometricManager;
 import androidx.cardview.widget.CardView;
 
+import org.apache.cordova.CordovaPlugin;
 import org.elastos.essentials.plugins.passwordmanager.FakeR;
 import org.elastos.essentials.plugins.passwordmanager.PasswordManager;
 import org.elastos.essentials.plugins.passwordmanager.UIStyling;
@@ -36,9 +37,11 @@ public class MasterPasswordPrompter extends AlertDialog {
     }
 
     public static class Builder {
+        private CordovaPlugin cordovaPlugin;
         private Activity activity;
         private String did;
         private PasswordManager passwordManager;
+        private FingerPrintAuthHelper fingerPrintAuthHelper;
         private AlertDialog.Builder alertDialogBuilder;
         private AlertDialog alertDialog;
         private OnCancelClickedListener onCancelClickedListener;
@@ -63,8 +66,9 @@ public class MasterPasswordPrompter extends AlertDialog {
         LinearLayout llBiometric;
         TextView lblBiometricIntro;
 
-        public Builder(Activity activity, String did, PasswordManager passwordManager) {
-            this.activity = activity;
+        public Builder(CordovaPlugin cordovaPlugin, String did, PasswordManager passwordManager) {
+            this.cordovaPlugin = cordovaPlugin;
+            this.activity = cordovaPlugin.cordova.getActivity();
             this.did = did;
             this.passwordManager = passwordManager;
 
@@ -141,10 +145,10 @@ public class MasterPasswordPrompter extends AlertDialog {
                 boolean shouldSaveToBiometric = shouldInitiateBiometry && swBiometric.isChecked();
                 if (swBiometric.isChecked() && !shouldInitiateBiometry) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        FingerPrintAuthHelper fingerPrintAuthHelper = new FingerPrintAuthHelper(activity, did, PasswordManager.FAKE_PASSWORD_MANAGER_PLUGIN_APP_ID);
+                        fingerPrintAuthHelper = new FingerPrintAuthHelper(this.cordovaPlugin, did);
                         fingerPrintAuthHelper.init();
                         activity.runOnUiThread(() -> {
-                            fingerPrintAuthHelper.authenticateAndGetPassword(PasswordManager.MASTER_PASSWORD_BIOMETRIC_KEY, new CancellationSignal(), new FingerPrintAuthHelper.GetPasswordAuthenticationCallback() {
+                            fingerPrintAuthHelper.authenticateAndGetPassword(PasswordManager.MASTER_PASSWORD_BIOMETRIC_KEY, new FingerPrintAuthHelper.AuthenticationCallback() {
                                 @Override
                                 public void onSuccess(String password) {
                                     alertDialog.dismiss();
@@ -155,11 +159,6 @@ public class MasterPasswordPrompter extends AlertDialog {
                                 public void onFailure(String message) {
                                     alertDialog.dismiss();
                                     onErrorListener.onError(message);
-                                }
-
-                                @Override
-                                public void onHelp(int helpCode, String helpString) {
-                                    // Not implemented
                                 }
                             });
                         });
@@ -226,6 +225,10 @@ public class MasterPasswordPrompter extends AlertDialog {
         public void cancel() {
             alertDialog.dismiss();
             onCancelClickedListener.onCancelClicked();
+        }
+
+        public FingerPrintAuthHelper getFingerPrintAuthHelper() {
+            return fingerPrintAuthHelper;
         }
 
         private void setTextPasswordVisible(boolean shouldShow) {
