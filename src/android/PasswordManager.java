@@ -111,6 +111,10 @@ public class PasswordManager {
         return PasswordManager.instance;
     }
 
+    public static void Destroy() {
+        PasswordManager.instance = null;
+    }
+
     /**
      * Saves or updates a password information into the secure database.
      * The passwordInfo's key field is checked to match existing content. Existing content

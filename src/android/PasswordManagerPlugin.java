@@ -71,6 +71,16 @@ public class PasswordManagerPlugin extends CordovaPlugin {
         this.activity = this.cordova.getActivity();
     }
 
+    /**
+     * The final call you receive before your activity is destroyed.
+     */
+    @Override
+    public void onDestroy() {
+        // PasswordManager use this activity, so must delete the PasswordManager when your activity is destroyed.
+        PasswordManager.Destroy();
+        super.onDestroy();
+    }
+
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         try {
