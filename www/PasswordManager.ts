@@ -49,7 +49,11 @@ class PasswordManagerImpl implements PasswordManagerPlugin.PasswordManager {
             exec((result: { passwordInfo: PasswordManagerPlugin.PasswordInfo })=>{
                 resolve(result.passwordInfo);
             }, (err)=>{
-                console.error("Error while calling PasswordManagerPlugin.getPasswordInfo()", err);
+                if (err.code == -3) {
+                    console.warn("Canceled while calling PasswordManagerPlugin.getPasswordInfo()", err);
+                } else {
+                    console.error("Error while calling PasswordManagerPlugin.getPasswordInfo()", err);
+                }
                 reject(this.nativeToTSException(err));
             }, 'PasswordManagerPlugin', 'getPasswordInfo', [key, options]);
         });
