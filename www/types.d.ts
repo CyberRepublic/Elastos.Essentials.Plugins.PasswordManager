@@ -263,22 +263,16 @@ declare namespace PasswordManagerPlugin {
         generateRandomPassword(options?: PasswordCreationOptions): Promise<string>;
 
         /**
-         * RESTRICTED
-         *
          * Sets the new master password for the current DID session. This master password locks the whole
          * database of password information.
          *
          * In case of a master password change, the password info database is re-encrypted with this new password.
-         *
-         * Only the password manager application is allowed to call this API.
          *
          * @returns True if the master password was successfully changed, false otherwise.
          */
         changeMasterPassword(): Promise<BooleanWithReason>;
 
         /**
-         * RESTRICTED
-         *
          * If the master password has ben unlocked earlier, all passwords are accessible for a while.
          * This API re-locks the passwords database and further requests from applications to this password
          * manager will require user to provide his master password again.
@@ -286,16 +280,12 @@ declare namespace PasswordManagerPlugin {
         lockMasterPassword();
 
         /**
-         * RESTRICTED
-         *
          * Deletes all password information for the active DID session. The encrypted passwords database
          * is deleted without any way to recover it.
          */
         deleteAll(): Promise<void>;
 
         /**
-         * RESTRICTED
-         *
          * Sets the unlock strategy for the password info database. By default, once the master password
          * if provided once by the user, the whole database is unlocked for a while, until elastOS exits,
          * or if one hour has passed, or if it's manually locked again.
@@ -303,29 +293,19 @@ declare namespace PasswordManagerPlugin {
          * For increased security, user can choose to get prompted for the master password every time using
          * this API.
          *
-         * This API can be called only by the password manager application.
-         *
          * @param mode Unlock strategy to use.
          */
         setUnlockMode(mode: PasswordUnlockMode);
 
         /**
-         * RESTRICTED
-         *
          * Returns the whole list of password information contained in the password database.
-         *
-         * Only the password manager application is allowed to call this API.
          *
          * @returns The list of existing password information.
          */
         getAllPasswordInfo(): Promise<PasswordInfo[]>;
 
         /**
-         * RESTRICTED
-         *
          * Deletes an existing password information from the secure database, for a given application.
-         *
-         * Only the password manager application can call this api.
          *
          * @param key Unique identifier for the password info to delete.
          *
@@ -334,8 +314,6 @@ declare namespace PasswordManagerPlugin {
         deleteAppPasswordInfo(targetAppId: string, key: string): Promise<BooleanWithReason>;
 
         /**
-         * RESTRICTED
-         *
          * Used by the DID session application to toggle DID contexts and deal with DID creation, sign in,
          * sign out. When a virtual context is set, api call such as getPasswordInfo() don't use the currently
          * signed in DID, but they use this virtual DID instead.

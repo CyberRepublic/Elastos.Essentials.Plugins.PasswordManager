@@ -41,7 +41,6 @@ import javax.crypto.spec.SecretKeySpec;
 public class PasswordManager {
     private static final String LOG_TAG = "PWDManager";
     private static final String SHARED_PREFS_KEY = "PWDMANAGERPREFS";
-    private static final String PASSWORD_MANAGER_APP_ID = "org.elastos.essentials.dapp.passwordmanager";
 
     public static final String FAKE_PASSWORD_MANAGER_PLUGIN_APP_ID = "fakemasterpasswordpluginappid";
     public static final String MASTER_PASSWORD_BIOMETRIC_KEY = "masterpasswordkey";
@@ -236,11 +235,6 @@ public class PasswordManager {
         String actualDID = getActualDIDContext(did);
         String actualAppID = getActualAppID(appID);
 
-        if (!appIsPasswordManager(actualAppID)) {
-            listener.onError("Only the password manager application can call this API");
-            return;
-        }
-
         checkMasterPasswordCreationRequired(actualDID, new OnMasterPasswordCreationListener() {
             @Override
             public void onMasterPasswordCreated() {
@@ -292,12 +286,6 @@ public class PasswordManager {
         String actualDID = getActualDIDContext(did);
         String actualAppID = getActualAppID(appID);
         String actualTargetAppID = getActualAppID(targetAppID);
-
-        // Only the password manager app can delete content that is not its own content.
-        if (!appIsPasswordManager(actualAppID) && !actualAppID.equals(actualTargetAppID)) {
-            listener.onError("Only the application manager application can delete password info that does not belong to it.");
-            return;
-        }
 
         loadDatabase(actualDID, new OnDatabaseLoadedListener() {
             @Override
@@ -359,11 +347,6 @@ public class PasswordManager {
     public void changeMasterPassword(String did, String appID, OnMasterPasswordChangeListener listener) throws Exception {
         String actualDID = getActualDIDContext(did);
         String actualAppID = getActualAppID(appID);
-
-        if (!appIsPasswordManager(actualAppID)) {
-            Log.e(LOG_TAG, "Only the password manager application can call this API");
-            return;
-        }
 
         loadDatabase(actualDID, new OnDatabaseLoadedListener() {
             @Override
@@ -449,11 +432,6 @@ public class PasswordManager {
         String actualDID = getActualDIDContext(did);
         String actualAppID = getActualAppID(appID);
 
-        if (!appIsPasswordManager(actualAppID)) {
-            Log.e(LOG_TAG, "Only the password manager application can call this API");
-            return;
-        }
-
         getPrefs(actualDID).edit().putInt(PREF_KEY_UNLOCK_MODE, unlockMode.ordinal()).apply();
 
         // if the mode becomes UNLOCK_EVERY_TIME, we lock the database
@@ -504,10 +482,6 @@ public class PasswordManager {
     private String getActualAppID(String baseAppID) {
         // TODO remove ?
         return baseAppID;
-    }
-
-    private boolean appIsPasswordManager(String appId) {
-        return appId.equals(PASSWORD_MANAGER_APP_ID);
     }
 
     private void loadDatabase(String did, OnDatabaseLoadedListener listener, boolean isPasswordRetry) {
