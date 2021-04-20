@@ -115,12 +115,6 @@ public class PasswordManagerPlugin extends CordovaPlugin {
                 case "setUnlockMode":
                     this.setUnlockMode(args, callbackContext);
                     break;
-                case "setVirtualDIDContext":
-                    this.setVirtualDIDContext(args, callbackContext);
-                    break;
-                case "setCurrentDID":
-                    this.setCurrentDID(args, callbackContext);
-                    break;
                 case "setDarkMode":
                     this.setDarkMode(args, callbackContext);
                     break;
@@ -393,24 +387,6 @@ public class PasswordManagerPlugin extends CordovaPlugin {
         PasswordUnlockMode unlockMode = PasswordUnlockMode.fromValue(unlockModeAsInt);
 
         PasswordManager.getSharedInstance(this).setUnlockMode(unlockMode, null, "");
-
-        JSONObject result = new JSONObject();
-        sendSuccess(callbackContext, result);
-    }
-
-    private void setVirtualDIDContext(JSONArray args, CallbackContext callbackContext) throws Exception {
-        String virtualDIDStringContext = args.isNull(0) ? null : args.getString(0);
-
-        PasswordManager.getSharedInstance(this).setVirtualDIDContext(virtualDIDStringContext);
-
-        JSONObject result = new JSONObject();
-        sendSuccess(callbackContext, result);
-    }
-
-    private void setCurrentDID(JSONArray args, CallbackContext callbackContext) throws Exception {
-        String did = args.isNull(0) ? null : args.getString(0);
-
-        PasswordManager.getSharedInstance(this).setDID(did);
 
         JSONObject result = new JSONObject();
         sendSuccess(callbackContext, result);

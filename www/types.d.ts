@@ -314,21 +314,6 @@ declare namespace PasswordManagerPlugin {
         deleteAppPasswordInfo(targetAppId: string, key: string): Promise<BooleanWithReason>;
 
         /**
-         * Used by the DID session application to toggle DID contexts and deal with DID creation, sign in,
-         * sign out. When a virtual context is set, api call such as getPasswordInfo() don't use the currently
-         * signed in DID, but they use this virtual DID instead.
-         *
-         * @param didString The DID context to use for all further api calls. Pass null to clear the virtual context.
-         */
-        setVirtualDIDContext(didString: string): Promise<void>;
-
-        /**
-         * Set the current did.
-         * @param did
-         */
-        setCurrentDID(did: string): Promise<void>;
-
-        /**
          * Set the theme mode.
          * @param useDarkMode True if use the dark mode theme, false use the light mode theme.
          */

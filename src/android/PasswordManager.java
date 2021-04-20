@@ -449,36 +449,14 @@ public class PasswordManager {
 
     /**
      * RESTRICTED
-     *
-     * Used by the DID session application to toggle DID contexts and deal with DID creation, sign in,
-     * sign out. When a virtual context is set, api call such as getPasswordInfo() don't use the currently
-     * signed in DID, but they use this virtual DID instead.
-     *
-     * @param didString The DID context to use for all further api calls. Pass null to clear the virtual context.
      */
-    public void setVirtualDIDContext(String didString) {
-        this.virtualDIDContext = didString;
-    }
-
-    public void setDID(String didString) {
-        this.did = didString;
-    }
-
     private String getActualDIDContext(String currentDIDContext) throws Exception {
-        if (virtualDIDContext != null) {
-            return virtualDIDContext;
-        }
-        else if (currentDIDContext != null) {
-            return currentDIDContext;
-        }
-        else if (did != null ) {
-            return did;
-        }
-        else {
-            throw new Exception("No signed in DID or virtual DID context exist. Need at least one of them!");
-        }
+        // TODO remove
+        return "";
     }
-
+    /**
+     * RESTRICTED
+     */
     private String getActualAppID(String baseAppID) {
         // TODO remove ?
         return baseAppID;
