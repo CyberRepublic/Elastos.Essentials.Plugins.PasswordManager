@@ -105,7 +105,7 @@ public class PasswordManager {
         }
         return PasswordManager.instance!;
     }
-    
+
     func setViewController(_ viewController: CDVViewController) {
 //        listenerReady = false;
         self.viewController = viewController;
@@ -583,7 +583,8 @@ public class PasswordManager {
     }
 
     private func getDatabaseDirectory(did: String) -> String {
-        return NSHomeDirectory() + "/pwm/" + did
+        // TODO remove did
+        return NSHomeDirectory() + "/Documents/data/pwm"
     }
 
     private func getDatabaseFilePath(did: String) -> String {
