@@ -52,7 +52,6 @@ public class PasswordManager {
     private final CordovaPlugin cordovaPlugin;
     private static PasswordManager instance;
     private HashMap<String, PasswordDatabaseInfo> databasesInfo = new HashMap<>();
-    private String virtualDIDContext = null;
     private String did = null;
     private MasterPasswordPrompter.Builder activeMasterPasswordPrompt = null;
     private FingerPrintAuthHelper fingerPrintAuthHelper = null;

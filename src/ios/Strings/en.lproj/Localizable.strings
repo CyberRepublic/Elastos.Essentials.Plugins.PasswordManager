@@ -1,0 +1,47 @@
+"pwm_prompt_title" = "Please enter your master password";
+"pwm_prompt_subtitle" = "Your master password is required to continue.";
+"pwm_prompt_wrong_password" = "Sorry, try again.";
+"pwm_prompt_use_biometric_auth" = "Use biometric authentication";
+"pwm_prompt_continue_with_biometry" = "Continue to authenticate using fingerprint or face recognition";
+"pwm_prompt_cancel" = "Cancel";
+"pwm_prompt_next" = "Next";
+
+"pwm_create_title" = "Please create your master password";
+"pwm_create_subtitle" = "Your master password will secure all apps passwords into a safe place.";
+"pwm_create_enter_password" = "Enter password";
+"pwm_create_repeat_password" = "Repeat password";
+"pwm_create_no_match" = "Passwords don't match";
+"pwm_create_cancel" = "Cancel";
+"pwm_create_create" = "Create";
+
+"api_perm_title" = "This capsule is requesting access to sensitive features.";
+"api_perm_feature" = "Feature:";
+"api_perm_description" = "What can the capsule do with it?";
+"api_perm_risk_low" = "Low Risk";
+"api_perm_risk_average" = "Moderate risk";
+"api_perm_risk_high" = "Potentially Harmful";
+"api_perm_deny" = "Deny";
+"api_perm_accept" = "Allow";
+
+"url_perm_title" = "URL Access Request";
+"url_perm_subtitle" = "This capsule wants to call an internet address outside of elastOS. Do you agree with this?";
+"url_perm_capsule" = "Capsule:";
+"url_perm_address" = "Address:";
+
+"intent_choose_title" = "Continue this action with:";
+"intent_choose_another" = "Another app";
+
+"ok" = "OK";
+"cancel" = "Cancel";
+
+"app_starting" = "Starting";
+
+"notification_contact_added" = "Contact added";
+"notification_contact_request" = "Contact request";
+"notification_contact_invitation_accepted" = "Contact invitation accepted";
+"notification_name_was_added_new" = " was just added as a new contact. Touch to view his/her profile.";
+"notification_someone_was_added_new" = "Someone was just added as a new contact. Touch to view his/her profile.";
+"notification_name_want_add" = " wants to add you as a contact. Touch to view more details.";
+"notification_someone_want_add" = "Someone wants to add you as a contact. Touch to view more details.";
+"notification_name_accept_invitation" = " has accepted your invitation. Touch to view details.";
+"notification_someone_accept_invitation" = "Your friend has accepted your invitation. Touch to view details.";

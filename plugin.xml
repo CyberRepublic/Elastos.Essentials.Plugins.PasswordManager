@@ -51,6 +51,42 @@
                 <param name="ios-package" value="PasswordManagerPlugin" />
             </feature>
         </config-file>
+
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="PopupDialog" spec="~> 1.1"/>
+                <pod name="RNCryptor" spec="~> 5.0"/>
+            </pods>
+        </podspec>
+
+        <source-file src="src/ios/AdvancedButton.swift"/>
+        <source-file src="src/ios/AdvancedButton.xib"/>
+        <source-file src="src/ios/BankCardPasswordInfo.swift"/>
+        <source-file src="src/ios/PasswordCreationOptions.swift"/>
+        <source-file src="src/ios/PasswordDatabaseInfo.swift"/>
+        <source-file src="src/ios/PasswordGetInfoOptions.swift"/>
+        <source-file src="src/ios/PasswordInfoBuilder.swift"/>
+        <source-file src="src/ios/PasswordManager.swift"/>
+        <source-file src="src/ios/PasswordManagerPlugin.swift"/>
+        <source-file src="src/ios/PasswordUnlockMode.swift"/>
+        <source-file src="src/ios/PasswordType.swift"/>
+        <source-file src="src/ios/UIStyling.swift"/>
+        <source-file src="src/ios/PasswordUtility.swift"/>
+        <source-file src="src/ios/dialogs/MasterPasswordCreator.swift" />
+        <source-file src="src/ios/dialogs/MasterPasswordCreator.xib" />
+        <source-file src="src/ios/dialogs/MasterPasswordPrompter.swift"/>
+        <source-file src="src/ios/dialogs/MasterPasswordPrompter.xib"/>
+        <source-file src="src/ios/passwordinfo/AccountPasswordInfo.swift"/>
+        <source-file src="src/ios/passwordinfo/BankAccountPasswordInfo.swift"/>
+        <source-file src="src/ios/passwordinfo/BankCardType.swift"/>
+        <source-file src="src/ios/passwordinfo/GenericPasswordInfo.swift"/>
+        <source-file src="src/ios/passwordinfo/PasswordInfo.swift"/>
+        <source-file src="src/ios/passwordinfo/WifiPasswordInfo.swift"/>
+
+        <resource-file src="src/ios/Strings" />
     </platform>
     <!-- <platform name="electron">
         <js-module src="src/electron/PasswordManagerPluginProxy.js" name="PasswordManagerPluginProxy">
