@@ -75,9 +75,6 @@ public protocol OnPasswordInfoSetListener : BasePasswordManagerListener {
 public class PasswordManager {
     private static let LOG_TAG = "PWDManager"
     private static let SHARED_PREFS_KEY = "PWDMANAGERPREFS"
-    private static let PASSWORD_MANAGER_APP_ID = "org.elastos.trinity.dapp.passwordmanager"
-    private static let DID_APPLICATION_APP_ID = "org.elastos.trinity.dapp.did"
-    private static let DID_SESSION_APPLICATION_APP_ID = "org.elastos.trinity.dapp.didsession"
 
     public static let FAKE_PASSWORD_MANAGER_PLUGIN_APP_ID = "fakemasterpasswordpluginappid"
     public static let MASTER_PASSWORD_BIOMETRIC_KEY = "masterpasswordkey"
@@ -85,18 +82,13 @@ public class PasswordManager {
     private static let PREF_KEY_UNLOCK_MODE = "unlockmode"
     private static let PREF_KEY_APPS_PASSWORD_STRATEGY = "appspasswordstrategy"
 
-    //private WebViewActivity activity;
     private static var instance: PasswordManager? = nil
     private var viewController: CDVViewController?;
-//    private let mainViewController: MainViewController
-//    private var appManager: AppManager? = nil
     private var databasesInfo = Dictionary<String, PasswordDatabaseInfo>()
     private var virtualDIDContext: String? = nil
     private var activeMasterPasswordPrompt: PopupDialog? = nil
 
     init() {
-//        self.appManager = AppManager.getShareInstance();
-//        self.mainViewController = appManager!.mainViewController
     }
 
     public static func getSharedInstance() -> PasswordManager {
@@ -203,8 +195,6 @@ public class PasswordManager {
     /**
      * Returns the whole list of password information contained in the password database.
      *
-     * Only the password manager application is allowed to call this API.
-     *
      * @returns The list of existing password information.
      */
     public func getAllPasswordInfo(did: String?, appID: String,
@@ -215,10 +205,6 @@ public class PasswordManager {
         let actualDID = try getActualDIDContext(currentDIDContext: did)
         let actualAppID = getActualAppID(appID)
 
-        if (!appIsPasswordManager(appId: actualAppID)) {
-            onError("Only the password manager application can call this API")
-            return
-        }
 
         checkMasterPasswordCreationRequired(did: actualDID, onMasterPasswordCreated: {
             self.loadDatabase(did: actualDID, onDatabaseLoaded: {
@@ -254,12 +240,6 @@ public class PasswordManager {
         let actualDID = try getActualDIDContext(currentDIDContext: did)
         let actualAppID = getActualAppID(appID)
         let actualTargetAppID = getActualAppID(targetAppID)
-
-        // Only the password manager app can delete content that is not its own content.
-        if (!appIsPasswordManager(appId: actualAppID) && actualAppID != actualTargetAppID) {
-            onError("Only the application manager application can delete password info that does not belong to it.")
-            return
-        }
 
         loadDatabase(did: actualDID, onDatabaseLoaded: {
             do {
@@ -305,11 +285,6 @@ public class PasswordManager {
 
         let actualDID = try getActualDIDContext(currentDIDContext: did)
         let actualAppID = getActualAppID(appID)
-
-        if !appIsPasswordManager(appId: actualAppID) {
-            print("Only the password manager application can call this API")
-            return
-        }
 
         loadDatabase(did: actualDID, onDatabaseLoaded: {
             let creatorController = MasterPasswordCreatorAlertController(nibName: "MasterPasswordCreator", bundle: Bundle.main)
@@ -396,11 +371,6 @@ public class PasswordManager {
         let actualDID = try getActualDIDContext(currentDIDContext: did)
         let actualAppID = getActualAppID(appID)
 
-        if (!appIsPasswordManager(appId: actualAppID)) {
-            print("Only the password manager application can call this API")
-            return
-        }
-
         saveToPrefs(did: actualDID, key: PasswordManager.PREF_KEY_UNLOCK_MODE, value: unlockMode.rawValue)
 
         // if the mode becomes UNLOCK_EVERY_TIME, we lock the database
@@ -430,17 +400,9 @@ public class PasswordManager {
         }
     }
 
+    //TODO remove all did and appid
     private func getActualAppID(_ baseAppID: String) -> String{
-        // Share the same appid for did session and did apps, to be able to share passwords. Use a real app id, not a random
-        // string, for security reasons.
-        if baseAppID == PasswordManager.DID_SESSION_APPLICATION_APP_ID {
-            return PasswordManager.DID_APPLICATION_APP_ID
-        }
         return baseAppID
-    }
-
-    private func appIsPasswordManager(appId: String) -> Bool {
-        return appId == PasswordManager.PASSWORD_MANAGER_APP_ID
     }
 
     private func loadDatabase(did: String,
@@ -482,7 +444,9 @@ public class PasswordManager {
             activeMasterPasswordPrompt = PopupDialog(viewController: prompterController, buttonAlignment: .horizontal, transitionStyle: .fadeIn, preferredWidth: 340, tapGestureDismissal: false, panGestureDismissal: false, hideStatusBar: false, completion: nil)
 
             activeMasterPasswordPrompt!.view.backgroundColor = UIColor.clear // For rounded corners
-            self.viewController!.present(activeMasterPasswordPrompt!, animated: false, completion: nil)
+            DispatchQueue.main.async {
+                self.viewController!.present(self.activeMasterPasswordPrompt!, animated: false, completion: nil)
+            }
 
             prompterController.setOnPasswordTypedListener { password, shouldSavePasswordToBiometric in
                 self.activeMasterPasswordPrompt!.dismiss()
