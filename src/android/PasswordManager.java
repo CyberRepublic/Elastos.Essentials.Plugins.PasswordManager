@@ -42,7 +42,6 @@ public class PasswordManager {
     private static final String LOG_TAG = "PWDManager";
     private static final String SHARED_PREFS_KEY = "PWDMANAGERPREFS";
 
-    public static final String FAKE_PASSWORD_MANAGER_PLUGIN_APP_ID = "fakemasterpasswordpluginappid";
     public static final String MASTER_PASSWORD_BIOMETRIC_KEY = "masterpasswordkey";
 
     private static final String PREF_KEY_UNLOCK_MODE = "unlockmode";
@@ -122,17 +121,14 @@ public class PasswordManager {
      * a wrong master password then cancels.
      */
     public void setPasswordInfo(PasswordInfo info, String did, String appID, OnPasswordInfoSetListener listener) throws Exception {
-        String actualDID = getActualDIDContext(did);
-        String actualAppID = getActualAppID(appID);
-
-        checkMasterPasswordCreationRequired(actualDID, new OnMasterPasswordCreationListener() {
+        checkMasterPasswordCreationRequired(did, new OnMasterPasswordCreationListener() {
             @Override
             public void onMasterPasswordCreated() {
-                loadDatabase(actualDID, new OnDatabaseLoadedListener() {
+                loadDatabase(did, new OnDatabaseLoadedListener() {
                     @Override
                     public void onDatabaseLoaded() {
                         try {
-                            setPasswordInfoReal(info, actualDID, actualAppID);
+                            setPasswordInfoReal(info, did, appID);
                             listener.onPasswordInfoSet();
                         }
                         catch (Exception e) {
@@ -175,23 +171,20 @@ public class PasswordManager {
      * @returns The password info, or null if nothing was found.
      */
     public void getPasswordInfo(String key, String did, String appID, PasswordGetInfoOptions options, OnPasswordInfoRetrievedListener listener) throws Exception {
-        String actualDID = getActualDIDContext(did);
-        String actualAppID = getActualAppID(appID);
-
-        checkMasterPasswordCreationRequired(actualDID, new OnMasterPasswordCreationListener() {
+        checkMasterPasswordCreationRequired(did, new OnMasterPasswordCreationListener() {
             @Override
             public void onMasterPasswordCreated() {
                 // In case caller doesn't want to show the password prompt if the database is locked, we return a cancellation exception.
-                if (!isDatabaseLoaded(actualDID) && !options.promptPasswordIfLocked) {
+                if (!isDatabaseLoaded(did) && !options.promptPasswordIfLocked) {
                     listener.onCancel();
                     return;
                 }
 
-                loadDatabase(actualDID, new OnDatabaseLoadedListener() {
+                loadDatabase(did, new OnDatabaseLoadedListener() {
                     @Override
                     public void onDatabaseLoaded() {
                         try {
-                            PasswordInfo info = getPasswordInfoReal(key, actualDID, actualAppID);
+                            PasswordInfo info = getPasswordInfoReal(key, did, appID);
                             listener.onPasswordInfoRetrieved(info);
                         }
                         catch (Exception e) {
@@ -231,17 +224,14 @@ public class PasswordManager {
      * @returns The list of existing password information.
      */
     public void getAllPasswordInfo(String did, String appID, OnAllPasswordInfoRetrievedListener listener) throws Exception {
-        String actualDID = getActualDIDContext(did);
-        String actualAppID = getActualAppID(appID);
-
-        checkMasterPasswordCreationRequired(actualDID, new OnMasterPasswordCreationListener() {
+        checkMasterPasswordCreationRequired(did, new OnMasterPasswordCreationListener() {
             @Override
             public void onMasterPasswordCreated() {
-                loadDatabase(actualDID, new OnDatabaseLoadedListener() {
+                loadDatabase(did, new OnDatabaseLoadedListener() {
                     @Override
                     public void onDatabaseLoaded() {
                         try {
-                            ArrayList<PasswordInfo> infos = getAllPasswordInfoReal(actualDID);
+                            ArrayList<PasswordInfo> infos = getAllPasswordInfoReal(did);
                             listener.onAllPasswordInfoRetrieved(infos);
                         }
                         catch (Exception e) {
@@ -282,15 +272,11 @@ public class PasswordManager {
      * @param key Unique identifier for the password info to delete.
      */
     public void deletePasswordInfo(String key, String did, String appID, String targetAppID, OnPasswordInfoDeletedListener listener) throws Exception {
-        String actualDID = getActualDIDContext(did);
-        String actualAppID = getActualAppID(appID);
-        String actualTargetAppID = getActualAppID(targetAppID);
-
-        loadDatabase(actualDID, new OnDatabaseLoadedListener() {
+        loadDatabase(did, new OnDatabaseLoadedListener() {
             @Override
             public void onDatabaseLoaded() {
                 try {
-                    deletePasswordInfoReal(key, actualDID, actualTargetAppID);
+                    deletePasswordInfoReal(key, did, targetAppID);
                     listener.onPasswordInfoDeleted();
                 }
                 catch (Exception e) {
@@ -344,10 +330,7 @@ public class PasswordManager {
      * Only the password manager application is allowed to call this API.
      */
     public void changeMasterPassword(String did, String appID, OnMasterPasswordChangeListener listener) throws Exception {
-        String actualDID = getActualDIDContext(did);
-        String actualAppID = getActualAppID(appID);
-
-        loadDatabase(actualDID, new OnDatabaseLoadedListener() {
+        loadDatabase(did, new OnDatabaseLoadedListener() {
             @Override
             public void onDatabaseLoaded() {
                 // No database exists. Start the master password creation flow
@@ -356,16 +339,16 @@ public class PasswordManager {
                         // Master password was provided and confirmed. Now we can use it.
 
                         try {
-                            PasswordDatabaseInfo dbInfo = databasesInfo.get(actualDID);
+                            PasswordDatabaseInfo dbInfo = databasesInfo.get(did);
 
                             // Changing the master password means re-encrypting the database with a different password
-                            encryptAndSaveDatabase(actualDID, password);
+                            encryptAndSaveDatabase(did, password);
 
                             // Remember the new password locally
                             dbInfo.activeMasterPassword = password;
 
                             // Disable biometric auth to force re-activating it, as the password has changed.
-                            setBiometricAuthEnabled(actualDID, false);
+                            setBiometricAuthEnabled(did, false);
 
                             listener.onMasterPasswordChanged();
                         }
@@ -396,9 +379,7 @@ public class PasswordManager {
      * manager will require user to provide his master password again.
      */
     public void lockMasterPassword(String did) throws Exception {
-        String actualDID = getActualDIDContext(did);
-
-        lockDatabase(actualDID);
+        lockDatabase(did);
     }
 
     /**
@@ -406,13 +387,11 @@ public class PasswordManager {
      * is deleted without any way to recover it.
      */
     public void deleteAll(String did) throws Exception {
-        String actualDID = getActualDIDContext(did);
-
         // Lock currently opened database
-        lockDatabase(actualDID);
+        lockDatabase(did);
 
         // Delete the permanent storage
-        deleteDatabase(actualDID);
+        deleteDatabase(did);
     }
 
     /**
@@ -428,37 +407,17 @@ public class PasswordManager {
      * @param unlockMode Unlock strategy to use.
      */
     public void setUnlockMode(PasswordUnlockMode unlockMode, String did, String appID) throws Exception {
-        String actualDID = getActualDIDContext(did);
-        String actualAppID = getActualAppID(appID);
-
-        getPrefs(actualDID).edit().putInt(PREF_KEY_UNLOCK_MODE, unlockMode.ordinal()).apply();
+        getPrefs(did).edit().putInt(PREF_KEY_UNLOCK_MODE, unlockMode.ordinal()).apply();
 
         // if the mode becomes UNLOCK_EVERY_TIME, we lock the database
-        if (getUnlockMode(actualDID) != PasswordUnlockMode.UNLOCK_EVERY_TIME && unlockMode == PasswordUnlockMode.UNLOCK_EVERY_TIME) {
-            lockDatabase(actualDID);
+        if (getUnlockMode(did) != PasswordUnlockMode.UNLOCK_EVERY_TIME && unlockMode == PasswordUnlockMode.UNLOCK_EVERY_TIME) {
+            lockDatabase(did);
         }
     }
 
     private PasswordUnlockMode getUnlockMode(String did) throws Exception {
-        String actualDID = getActualDIDContext(did);
-
-        int savedUnlockModeAsInt = getPrefs(actualDID).getInt(PREF_KEY_UNLOCK_MODE, PasswordUnlockMode.UNLOCK_FOR_A_WHILE.ordinal());
+        int savedUnlockModeAsInt = getPrefs(did).getInt(PREF_KEY_UNLOCK_MODE, PasswordUnlockMode.UNLOCK_FOR_A_WHILE.ordinal());
         return PasswordUnlockMode.fromValue(savedUnlockModeAsInt);
-    }
-
-    /**
-     * RESTRICTED
-     */
-    private String getActualDIDContext(String currentDIDContext) throws Exception {
-        // TODO remove
-        return "";
-    }
-    /**
-     * RESTRICTED
-     */
-    private String getActualAppID(String baseAppID) {
-        // TODO remove ?
-        return baseAppID;
     }
 
     private void loadDatabase(String did, OnDatabaseLoadedListener listener, boolean isPasswordRetry) {
@@ -735,10 +694,9 @@ public class PasswordManager {
     }
 
     private void setPasswordInfoReal(PasswordInfo info, String did, String appID) throws Exception {
-        String actualDID = getActualDIDContext(did);
-        PasswordDatabaseInfo dbInfo = databasesInfo.get(actualDID);
+        PasswordDatabaseInfo dbInfo = databasesInfo.get(did);
         dbInfo.setPasswordInfo(appID, info);
-        encryptAndSaveDatabase(actualDID, dbInfo.activeMasterPassword);
+        encryptAndSaveDatabase(did, dbInfo.activeMasterPassword);
     }
 
     private PasswordInfo getPasswordInfoReal(String key, String did, String appID) throws Exception {

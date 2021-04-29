@@ -76,7 +76,6 @@ public class PasswordManager {
     private static let LOG_TAG = "PWDManager"
     private static let SHARED_PREFS_KEY = "PWDMANAGERPREFS"
 
-    public static let FAKE_PASSWORD_MANAGER_PLUGIN_APP_ID = "fakemasterpasswordpluginappid"
     public static let MASTER_PASSWORD_BIOMETRIC_KEY = "masterpasswordkey"
 
     private static let PREF_KEY_UNLOCK_MODE = "unlockmode"
@@ -85,7 +84,6 @@ public class PasswordManager {
     private static var instance: PasswordManager? = nil
     private var viewController: CDVViewController?;
     private var databasesInfo = Dictionary<String, PasswordDatabaseInfo>()
-    private var virtualDIDContext: String? = nil
     private var activeMasterPasswordPrompt: PopupDialog? = nil
 
     init() {
@@ -117,18 +115,14 @@ public class PasswordManager {
      * Password info could fail to be saved in case user cancels the master password creation or enters
      * a wrong master password then cancels.
      */
-    public func setPasswordInfo(info: PasswordInfo, did: String?, appID: String,
+    public func setPasswordInfo(info: PasswordInfo, did: String, appID: String,
                                 onPasswordInfoSet: @escaping ()->Void,
                                 onCancel: @escaping ()->Void,
                                 onError: @escaping (_ error: String)->Void) throws {
-
-        let actualDID = try getActualDIDContext(currentDIDContext: did)
-        let actualAppID = getActualAppID(appID)
-
-        checkMasterPasswordCreationRequired(did: actualDID, onMasterPasswordCreated: {
-            self.loadDatabase(did: actualDID, onDatabaseLoaded: {
+        checkMasterPasswordCreationRequired(did: did, onMasterPasswordCreated: {
+            self.loadDatabase(did: did, onDatabaseLoaded: {
                 do {
-                    try self.setPasswordInfoReal(info: info, did: actualDID, appID: actualAppID)
+                    try self.setPasswordInfoReal(info: info, did: did, appID: appID)
                     onPasswordInfoSet()
                 }
                 catch (let error) {
@@ -156,25 +150,21 @@ public class PasswordManager {
      *
      * @returns The password info, or null if nothing was found.
      */
-    public func getPasswordInfo(key: String, did: String?, appID: String,
+    public func getPasswordInfo(key: String, did: String, appID: String,
                                 options: PasswordGetInfoOptions,
                                 onPasswordInfoRetrieved: @escaping (_ password: PasswordInfo?)->Void,
                                 onCancel: @escaping ()->Void,
                                 onError: @escaping (_ error: String)->Void) throws {
-
-        let actualDID = try getActualDIDContext(currentDIDContext: did)
-        let actualAppID = getActualAppID(appID)
-
-        checkMasterPasswordCreationRequired(did: actualDID, onMasterPasswordCreated: {
+        checkMasterPasswordCreationRequired(did: did, onMasterPasswordCreated: {
             // In case caller doesn't want to show the password prompt if the database is locked, we return a cancellation exception.
-            if !self.isDatabaseLoaded(did: actualDID) && !options.promptPasswordIfLocked {
+            if !self.isDatabaseLoaded(did: did) && !options.promptPasswordIfLocked {
                 onCancel()
                 return
             }
 
-            self.loadDatabase(did: actualDID, onDatabaseLoaded: {
+            self.loadDatabase(did: did, onDatabaseLoaded: {
                 do {
-                    let info = try self.getPasswordInfoReal(key: key, did: actualDID, appID: actualAppID)
+                    let info = try self.getPasswordInfoReal(key: key, did: did, appID: appID)
                     onPasswordInfoRetrieved(info)
                 }
                 catch (let error) {
@@ -197,19 +187,14 @@ public class PasswordManager {
      *
      * @returns The list of existing password information.
      */
-    public func getAllPasswordInfo(did: String?, appID: String,
+    public func getAllPasswordInfo(did: String, appID: String,
                                    onAllPasswordInfoRetrieved: @escaping (_ info: [PasswordInfo])->Void,
                                    onCancel: @escaping ()->Void,
                                    onError: @escaping (_ error: String)->Void) throws {
-
-        let actualDID = try getActualDIDContext(currentDIDContext: did)
-        let actualAppID = getActualAppID(appID)
-
-
-        checkMasterPasswordCreationRequired(did: actualDID, onMasterPasswordCreated: {
-            self.loadDatabase(did: actualDID, onDatabaseLoaded: {
+        checkMasterPasswordCreationRequired(did: did, onMasterPasswordCreated: {
+            self.loadDatabase(did: did, onDatabaseLoaded: {
                 do {
-                    let infos = try self.getAllPasswordInfoReal(did: actualDID)
+                    let infos = try self.getAllPasswordInfoReal(did: did)
                     onAllPasswordInfoRetrieved(infos)
                 }
                 catch (let error) {
@@ -232,18 +217,13 @@ public class PasswordManager {
      *
      * @param key Unique identifier for the password info to delete.
      */
-    public func deletePasswordInfo(key: String, did: String?, appID: String, targetAppID: String,
+    public func deletePasswordInfo(key: String, did: String, appID: String, targetAppID: String,
                                    onPasswordInfoDeleted: @escaping ()->Void,
                                    onCancel: @escaping ()->Void,
                                    onError: @escaping (_ error: String)->Void) throws {
-
-        let actualDID = try getActualDIDContext(currentDIDContext: did)
-        let actualAppID = getActualAppID(appID)
-        let actualTargetAppID = getActualAppID(targetAppID)
-
-        loadDatabase(did: actualDID, onDatabaseLoaded: {
+        loadDatabase(did: did, onDatabaseLoaded: {
             do {
-                try self.deletePasswordInfoReal(key: key, did: actualDID, targetAppID: actualTargetAppID)
+                try self.deletePasswordInfoReal(key: key, did: did, targetAppID: targetAppID)
                 onPasswordInfoDeleted()
             }
             catch (let error) {
@@ -278,15 +258,11 @@ public class PasswordManager {
      *
      * Only the password manager application is allowed to call this API.
      */
-    public func changeMasterPassword(did: String?, appID: String,
+    public func changeMasterPassword(did: String, appID: String,
                                      onMasterPasswordChanged: @escaping ()->Void,
                                      onCancel: @escaping ()->Void,
                                      onError: @escaping (_ error: String)->Void) throws {
-
-        let actualDID = try getActualDIDContext(currentDIDContext: did)
-        let actualAppID = getActualAppID(appID)
-
-        loadDatabase(did: actualDID, onDatabaseLoaded: {
+        loadDatabase(did: did, onDatabaseLoaded: {
             let creatorController = MasterPasswordCreatorAlertController(nibName: "MasterPasswordCreator", bundle: Bundle.main)
 
             creatorController.setCanDisableMasterPasswordUse(false)
@@ -302,20 +278,20 @@ public class PasswordManager {
                 // Master password was provided and confirmed. Now we can use it.
 
                 do {
-                    if let dbInfo = self.databasesInfo[actualDID] {
+                    if let dbInfo = self.databasesInfo[did] {
                         // Changing the master password means re-encrypting the database with a different password
-                        try self.encryptAndSaveDatabase(did: actualDID, masterPassword: password)
+                        try self.encryptAndSaveDatabase(did: did, masterPassword: password)
 
                         // Remember the new password locally
                         dbInfo.activeMasterPassword = password
 
                         // Disable biometric auth to force re-activating it, as the password has changed.
-                        self.setBiometricAuthEnabled(did: actualDID, false)
+                        self.setBiometricAuthEnabled(did: did, false)
 
                         onMasterPasswordChanged()
                     }
                     else {
-                        throw "No active database for DID \(actualDID)"
+                        throw "No active database for DID \(did)"
                     }
                 }
                 catch (let error) {
@@ -336,23 +312,19 @@ public class PasswordManager {
      * manager will require user to provide his master password again.
      */
     public func lockMasterPassword(did: String) throws {
-        let actualDID = try getActualDIDContext(currentDIDContext: did)
-
-        lockDatabase(did: actualDID)
+        lockDatabase(did: did)
     }
 
     /**
      * Deletes all password information for the active DID session. The encrypted passwords database
      * is deleted without any way to recover it.
      */
-    public func deleteAll(did: String?) throws {
-        let actualDID = try getActualDIDContext(currentDIDContext: did)
-
+    public func deleteAll(did: String) throws {
         // Lock currently opened database
-        lockDatabase(did: actualDID)
+        lockDatabase(did: did)
 
         // Delete the permanent storage
-        deleteDatabase(did: actualDID)
+        deleteDatabase(did: did)
     }
 
     /**
@@ -367,42 +339,18 @@ public class PasswordManager {
      *
      * @param unlockMode Unlock strategy to use.
      */
-    public func setUnlockMode(unlockMode: PasswordUnlockMode, did: String?, appID: String) throws {
-        let actualDID = try getActualDIDContext(currentDIDContext: did)
-        let actualAppID = getActualAppID(appID)
-
-        saveToPrefs(did: actualDID, key: PasswordManager.PREF_KEY_UNLOCK_MODE, value: unlockMode.rawValue)
+    public func setUnlockMode(unlockMode: PasswordUnlockMode, did: String, appID: String) throws {
+        saveToPrefs(did: did, key: PasswordManager.PREF_KEY_UNLOCK_MODE, value: unlockMode.rawValue)
 
         // if the mode becomes UNLOCK_EVERY_TIME, we lock the database
-        if (try getUnlockMode(did: actualDID) != .UNLOCK_EVERY_TIME && unlockMode == PasswordUnlockMode.UNLOCK_EVERY_TIME) {
-            lockDatabase(did: actualDID)
+        if (try getUnlockMode(did: did) != .UNLOCK_EVERY_TIME && unlockMode == PasswordUnlockMode.UNLOCK_EVERY_TIME) {
+            lockDatabase(did: did)
         }
     }
 
     private func getUnlockMode(did: String) throws -> PasswordUnlockMode {
-        let actualDID = try getActualDIDContext(currentDIDContext: did)
-
-        let unlockModeAsInt = getPrefsInt(did: actualDID, key: PasswordManager.PREF_KEY_UNLOCK_MODE, defaultValue: PasswordUnlockMode.UNLOCK_FOR_A_WHILE.rawValue)
+        let unlockModeAsInt = getPrefsInt(did: did, key: PasswordManager.PREF_KEY_UNLOCK_MODE, defaultValue: PasswordUnlockMode.UNLOCK_FOR_A_WHILE.rawValue)
         return PasswordUnlockMode(rawValue: unlockModeAsInt) ?? PasswordUnlockMode.UNLOCK_FOR_A_WHILE
-    }
-
-    private func getActualDIDContext(currentDIDContext: String?) throws -> String {
-        if virtualDIDContext != nil {
-            return virtualDIDContext!
-        }
-        else {
-            if currentDIDContext != nil {
-                return currentDIDContext!
-            }
-            else {
-                throw "No signed in DID or virtual DID context exist. Need at least one of them!"
-            }
-        }
-    }
-
-    //TODO remove all did and appid
-    private func getActualAppID(_ baseAppID: String) -> String{
-        return baseAppID
     }
 
     private func loadDatabase(did: String,
@@ -463,7 +411,7 @@ public class PasswordManager {
                         // User chose to enable biometric authentication (was not enabled before). So we save the
                         // master password to the biometric crypto space.
                         if (shouldSavePasswordToBiometric) {
-                            let fingerPrintAuthHelper = FingerPrintAuthHelper(did: did, dAppID: PasswordManager.FAKE_PASSWORD_MANAGER_PLUGIN_APP_ID)
+                            let fingerPrintAuthHelper = FingerPrintAuthHelper(did: did)
                             fingerPrintAuthHelper.authenticateAndSavePassword(passwordKey: PasswordManager.MASTER_PASSWORD_BIOMETRIC_KEY, password: password!) { error in
                                 if error == nil {
                                     // Save user's choice to use biometric auth method next time
@@ -547,8 +495,7 @@ public class PasswordManager {
     }
 
     private func getDatabaseDirectory(did: String) -> String {
-        // TODO remove did
-        return NSHomeDirectory() + "/Documents/data/pwm"
+        return NSHomeDirectory() + "/Documents/data/pwm" + did
     }
 
     private func getDatabaseFilePath(did: String) -> String {
@@ -619,8 +566,7 @@ public class PasswordManager {
         }
     }
 
-    private func decryptData(data: Data, masterPassword: String) throws -> Data
-    {
+    private func decryptData(data: Data, masterPassword: String) throws -> Data {
         let decryptor = RNCryptor.Decryptor(password: masterPassword)
         let plaintext = NSMutableData()
 
@@ -651,8 +597,7 @@ public class PasswordManager {
         try result.write(to: URL(fileURLWithPath: dbPath))
     }
 
-    private func encryptData(plainTextBytes: Data, masterPassword: String) throws -> Data
-    {
+    private func encryptData(plainTextBytes: Data, masterPassword: String) throws -> Data {
         let encryptor = RNCryptor.Encryptor(password: masterPassword)
         let ciphertext = NSMutableData()
 

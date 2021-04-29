@@ -180,7 +180,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
         }
 
         JSONObject result = new JSONObject();
-        PasswordManager.getSharedInstance(this).setPasswordInfo(passwordInfo, null, "", new PasswordManager.OnPasswordInfoSetListener(){
+        PasswordManager.getSharedInstance(this).setPasswordInfo(passwordInfo, "", "", new PasswordManager.OnPasswordInfoSetListener(){
             @Override
             public void onPasswordInfoSet() {
                 try {
@@ -221,7 +221,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
         }
 
         JSONObject result = new JSONObject();
-        PasswordManager.getSharedInstance(this).getPasswordInfo(key, null, "", options, new PasswordManager.OnPasswordInfoRetrievedListener() {
+        PasswordManager.getSharedInstance(this).getPasswordInfo(key, "", "", options, new PasswordManager.OnPasswordInfoRetrievedListener() {
             @Override
             public void onPasswordInfoRetrieved(PasswordInfo info) {
                 try {
@@ -248,7 +248,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
 
     private void getAllPasswordInfo(JSONArray args, CallbackContext callbackContext) throws Exception {
         JSONObject result = new JSONObject();
-        PasswordManager.getSharedInstance(this).getAllPasswordInfo(null, "", new PasswordManager.OnAllPasswordInfoRetrievedListener() {
+        PasswordManager.getSharedInstance(this).getAllPasswordInfo("", "", new PasswordManager.OnAllPasswordInfoRetrievedListener() {
             @Override
             public void onAllPasswordInfoRetrieved(ArrayList<PasswordInfo> infos) {
                 try {
@@ -282,7 +282,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
         String key = args.getString(0);
 
         JSONObject result = new JSONObject();
-        PasswordManager.getSharedInstance(this).deletePasswordInfo(key, null, "", "", new PasswordManager.OnPasswordInfoDeletedListener() {
+        PasswordManager.getSharedInstance(this).deletePasswordInfo(key, "", "", "", new PasswordManager.OnPasswordInfoDeletedListener() {
             @Override
             public void onPasswordInfoDeleted() {
                 try {
@@ -309,7 +309,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
         String key = args.getString(1);
 
         JSONObject result = new JSONObject();
-        PasswordManager.getSharedInstance(this).deletePasswordInfo(key, null, "", targetAppID, new PasswordManager.OnPasswordInfoDeletedListener() {
+        PasswordManager.getSharedInstance(this).deletePasswordInfo(key, "", "", targetAppID, new PasswordManager.OnPasswordInfoDeletedListener() {
             @Override
             public void onPasswordInfoDeleted() {
                 try {
@@ -345,7 +345,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
     private void changeMasterPassword(JSONArray args, CallbackContext callbackContext) throws Exception {
         JSONObject result = new JSONObject();
 
-        PasswordManager.getSharedInstance(this).changeMasterPassword(null, "", new PasswordManager.OnMasterPasswordChangeListener() {
+        PasswordManager.getSharedInstance(this).changeMasterPassword("", "", new PasswordManager.OnMasterPasswordChangeListener() {
             @Override
             public void onMasterPasswordChanged() {
                 try {
@@ -368,14 +368,14 @@ public class PasswordManagerPlugin extends CordovaPlugin {
     }
 
     private void lockMasterPassword(JSONArray args, CallbackContext callbackContext) throws Exception {
-        PasswordManager.getSharedInstance(this).lockMasterPassword(null);
+        PasswordManager.getSharedInstance(this).lockMasterPassword("");
 
         JSONObject result = new JSONObject();
         sendSuccess(callbackContext, result);
     }
 
     private void deleteAll(JSONArray args, CallbackContext callbackContext) throws Exception {
-        PasswordManager.getSharedInstance(this).deleteAll(null);
+        PasswordManager.getSharedInstance(this).deleteAll("");
 
         JSONObject result = new JSONObject();
         sendSuccess(callbackContext, result);
@@ -386,7 +386,7 @@ public class PasswordManagerPlugin extends CordovaPlugin {
 
         PasswordUnlockMode unlockMode = PasswordUnlockMode.fromValue(unlockModeAsInt);
 
-        PasswordManager.getSharedInstance(this).setUnlockMode(unlockMode, null, "");
+        PasswordManager.getSharedInstance(this).setUnlockMode(unlockMode, "", "");
 
         JSONObject result = new JSONObject();
         sendSuccess(callbackContext, result);

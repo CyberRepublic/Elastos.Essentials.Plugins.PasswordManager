@@ -170,7 +170,7 @@ class MasterPasswordPrompterAlertController: UIViewController {
 
         let shouldSaveToBiometric = shouldInitiateBiometry && swBiometric.isOn
         if (swBiometric.isOn && !shouldInitiateBiometry && canUseBiometrictAuth()) {
-            let fingerPrintAuthHelper = FingerPrintAuthHelper(did: did!, dAppID: PasswordManager.FAKE_PASSWORD_MANAGER_PLUGIN_APP_ID)
+            let fingerPrintAuthHelper = FingerPrintAuthHelper(did: did!)
 
             fingerPrintAuthHelper.authenticateAndGetPassword(passwordKey: PasswordManager.MASTER_PASSWORD_BIOMETRIC_KEY) { password, error  in
                 if error == nil {
