@@ -23,11 +23,11 @@
 import Foundation
 
 class UIStyling {
-    public static var popupMainTextColor = UIColor.black
-    public static var popupInputHintTextColor = UIColor.black
-    public static var popupMainBackgroundColor = UIColor.black
-    public static var popupSecondaryBackgroundColor = UIColor.black
-    
+    public static var popupMainTextColor = UIColor.init(hex: "#161740")!
+    public static var popupInputHintTextColor = UIColor.init(hex: "#161740")!
+    public static var popupMainBackgroundColor = UIColor.init(hex: "#F0F0F0")!
+    public static var popupSecondaryBackgroundColor = UIColor.init(hex: "#FFFFFF")!
+
     static func prepare(useDarkMode: Bool) {
         if useDarkMode {
             // DARK MODE
