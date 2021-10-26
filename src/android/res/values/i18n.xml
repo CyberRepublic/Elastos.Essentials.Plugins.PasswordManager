@@ -15,34 +15,4 @@
     <string name="pwm_create_no_match">Passwords don\'t match</string>
     <string name="pwm_create_cancel">Cancel</string>
     <string name="pwm_create_create">Create</string>
-
-    <string name="api_perm_title">This capsule is requesting access to sensitive features.</string>
-    <string name="api_perm_feature">Feature:</string>
-    <string name="api_perm_description">What can the capsule do with it?</string>
-    <string name="api_perm_risk_low">Low Risk</string>
-    <string name="api_perm_risk_average">Moderate risk</string>
-    <string name="api_perm_risk_high">Potentially Harmful</string>
-    <string name="api_perm_deny">Deny</string>
-    <string name="api_perm_accept">Allow</string>
-
-    <string name="url_perm_title">URL Access Request</string>
-    <string name="url_perm_subtitle">This capsule wants to call an internet address outside of elastOS. Do you agree with this?</string>
-    <string name="url_perm_capsule">Capsule:</string>
-    <string name="url_perm_address">Address:</string>
-
-    <string name="intent_choose_title">Continue this action with:</string>
-    <string name="intent_choose_another">Another app</string>
-
-    <string name="app_starting">Starting</string>
-
-    <string name="notification_contact_added">Contact added</string>
-    <string name="notification_contact_request">Contact request</string>
-    <string name="notification_contact_invitation_accepted">Contact invitation accepted</string>
-    <string name="notification_name_was_added_new">&#160;was just added as a new contact. Touch to view his/her profile.</string>
-    <string name="notification_someone_was_added_new">Someone was just added as a new contact. Touch to view his/her profile.</string>
-    <string name="notification_name_want_add">&#160;wants to add you as a contact. Touch to view more details.</string>
-    <string name="notification_someone_want_add">Someone wants to add you as a contact. Touch to view more details.</string>
-    <string name="notification_name_accept_invitation">&#160;has accepted your invitation. Touch to view details.</string>
-    <string name="notification_someone_accept_invitation">Your friend has accepted your invitation. Touch to view details.</string>
-
 </resources>

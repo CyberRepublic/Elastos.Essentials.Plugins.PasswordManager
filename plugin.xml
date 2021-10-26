@@ -39,6 +39,7 @@
         <resource-file src="src/android/res/layout/dialog_password_manager_create.xml" target="res/layout/dialog_password_manager_create.xml"/>
         <resource-file src="src/android/res/layout/dialog_password_manager_prompt.xml" target="res/layout/dialog_password_manager_prompt.xml"/>
         <resource-file src="src/android/res/values/i18n.xml" target="res/values/i18n.xml"/>
+        <resource-file src="src/android/res/values-it/i18n.xml" target="res/values-it/i18n.xml"/>
         <resource-file src="src/android/res/values-fr/i18n.xml" target="res/values-fr/i18n.xml"/>
         <resource-file src="src/android/res/values-zh/i18n.xml" target="res/values-zh/i18n.xml"/>
         <resource-file src="src/android/res/drawable/ic_lock.png" target="res/drawable/ic_lock.png"/>

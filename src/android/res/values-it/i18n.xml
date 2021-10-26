@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pwm_prompt_title">Inserisci la password principale</string>
+    <string name="pwm_prompt_subtitle">Devi inserire la tua password principale per continuare</string>
+    <string name="pwm_prompt_wrong_password">Password errata, per favore reinserisci</string>
+    <string name="pwm_prompt_use_biometric_auth">Usa l\'autenticazione biometrica</string>
+    <string name="pwm_prompt_continue_with_biometry">Continua a utilizzare le impronte digitali o il riconoscimento facciale per la verifica dell\'identità</string>
+    <string name="pwm_prompt_cancel">Annulla</string>
+    <string name="pwm_prompt_next">Continua</string>
+
+    <string name="pwm_create_title">Per favore crea la tua password principale</string>
+    <string name="pwm_create_subtitle">La tua password principale conserverà tutte le password dell\'applicazione in un luogo sicuro</string>
+    <string name="pwm_create_enter_passwod">Inserire la password</string>
+    <string name="pwm_create_repeat_password">Si prega di inserire nuovamente la password</string>
+    <string name="pwm_create_no_match">Password incoerenti</string>
+    <string name="pwm_create_cancel">Annulla</string>
+    <string name="pwm_create_create">Creare</string>
+</resources>

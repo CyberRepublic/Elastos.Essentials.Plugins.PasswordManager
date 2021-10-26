@@ -1,0 +1,15 @@
+"pwm_prompt_title" = "Inserisci la password principale";
+"pwm_prompt_subtitle" = "Devi inserire la tua password principale per continuare";
+"pwm_prompt_wrong_password" = "Password errata, per favore reinserisci";
+"pwm_prompt_use_biometric_auth" = "Usa l'autenticazione biometrica";
+"pwm_prompt_continue_with_biometry" = "Continua a utilizzare le impronte digitali o il riconoscimento facciale per la verifica dell'identità";
+"pwm_prompt_cancel" = "Annulla";
+"pwm_prompt_next" = "Continua";
+
+"pwm_create_title" = "Per favore crea la tua password principale";
+"pwm_create_subtitle" = "La tua password principale conserverà tutte le password dell'applicazione in un luogo sicuro";
+"pwm_create_enter_password" = "Inserire la password";
+"pwm_create_repeat_password" = "Si prega di inserire nuovamente la password";
+"pwm_create_no_match" = "Password incoerenti";
+"pwm_create_cancel" = "Annulla";
+"pwm_create_create" = "Creare";

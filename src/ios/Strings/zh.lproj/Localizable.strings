@@ -13,35 +13,3 @@
 "pwm_create_no_match" = "密码不一致";
 "pwm_create_cancel" = "取消";
 "pwm_create_create" = "创建";
-
-"api_perm_title" = "该胶囊要求使用敏感功能";
-"api_perm_feature" = "功能:";
-"api_perm_description" = "胶囊通过此功能能做什么?";
-"api_perm_risk_low" = "低风险";
-"api_perm_risk_average" = "中等风险";
-"api_perm_risk_high" = "潜在危害";
-"api_perm_deny" = "拒绝";
-"api_perm_accept" = "同意";
-
-"url_perm_title" = "请求URL访问";
-"url_perm_subtitle" = "这个胶囊想要访问elastOS外部的一个地址。 您同意吗?";
-"url_perm_capsule" = "胶囊:";
-"url_perm_address" = "地址:";
-
-"intent_choose_title" = "打开方式:";
-"intent_choose_another" = "其它应用";
-
-"ok" = "确定";
-"cancel" = "取消";
-
-"app_starting" = "正在启动";
-
-"notification_contact_added" = "联系人已添加";
-"notification_contact_request" = "联系人请求";
-"notification_contact_invitation_accepted" = "添加联系人邀请已被接受";
-"notification_name_was_added_new" = "刚刚被添加为新联系人。 点击可查看他/她的个人资料。";
-"notification_someone_was_added_new" = "有新的联系人。 点击可查看他/她的个人资料。";
-"notification_name_want_add" = "想添加您为联系人。 点击可查看更多详细信息。";
-"notification_someone_want_add" = "有人想添加您为联系人。 点击可查看更多详细信息。";
-"notification_name_accept_invitation" = "接受了您的邀请。 点击可查看详细信息。";
-"notification_someone_accept_invitation" = "您的朋友接受了您的邀请。 点击可查看详细信息。";

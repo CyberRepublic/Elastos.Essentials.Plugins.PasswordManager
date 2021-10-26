@@ -157,6 +157,8 @@ extension String {
             break;
         case "fr":
             break;
+        case "it":
+            break;
         default:
             lang = "en"
         }
