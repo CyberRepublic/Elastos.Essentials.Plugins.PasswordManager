@@ -612,6 +612,38 @@ public class PasswordManager {
         }
     }
 
+    /**
+     * Decryption attempt, multi-steps (different iteration counts) for backward compatibility with
+     * older keys.
+     */
+     // NOTE: implementation not used, because 327680 is a bit slow on some devices - not worth the change for now
+   /*  private byte[] decryptData(HashMap<String, byte[]> map, String masterPassword) throws Exception
+    {
+        Exception decryptionError = null;
+        int[] iterationCounts = {327680, 1324}; // Most probable iteration counts should be first in the list
+        for (int i=0;i<iterationCounts.length; i++) {
+            try {
+                byte[] decrypted = _decryptData(map, masterPassword, iterationCounts[i]);
+                // If we are here, this means we could decrypt.
+                return decrypted;
+            }
+            catch (Exception e) {
+                if (e.getMessage().contains("BAD_DECRYPT")) {
+                    // Remember one of the decrypt exceptions to re-throw it in the end if none of the methods worked
+                    decryptionError = e;
+                }
+                else {
+                    // Other exception than decryption: immediately forward the exception and stop.
+                    throw e;
+                }
+            }
+        }
+
+        // If we are here, this means none of the above attempts have succeeded
+        throw decryptionError;
+    } */
+
+    // private byte[] _decryptData(HashMap<String, byte[]> map, String masterPassword, int iterationCount) throws Exception
     private byte[] decryptData(HashMap<String, byte[]> map, String masterPassword) throws Exception
     {
         byte[] decrypted = null;
@@ -623,6 +655,7 @@ public class PasswordManager {
         // Regenerate key from password
         char[] passwordChar = masterPassword.toCharArray();
         PBEKeySpec pbKeySpec = new PBEKeySpec(passwordChar, salt, 1324, 256);
+        // PBEKeySpec pbKeySpec = new PBEKeySpec(passwordChar, salt, iterationCount, 256);
         SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         byte[] keyBytes = secretKeyFactory.generateSecret(pbKeySpec).getEncoded();
         SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
@@ -671,6 +704,7 @@ public class PasswordManager {
         // PBKDF2 - derive the key from the password, don't use passwords directly
         char[] passwordChar = masterPassword.toCharArray(); // Turn password into char[] array
         PBEKeySpec pbKeySpec = new PBEKeySpec(passwordChar, salt, 1324, 256);
+        // PBEKeySpec pbKeySpec = new PBEKeySpec(passwordChar, salt, 327680, 256);
         SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         byte[] keyBytes = secretKeyFactory.generateSecret(pbKeySpec).getEncoded();
         SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
