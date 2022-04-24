@@ -3,6 +3,7 @@
     <string name="pwm_prompt_title">Saisie du mot de passe principal</string>
     <string name="pwm_prompt_subtitle">Votre mot de passe principal est requis pour continuer.</string>
     <string name="pwm_prompt_wrong_password">Veuillez réessayer.</string>
+    <string name="pwm_prompt_recreate">Authentification biométrique doit être réactivée.</string>
     <string name="pwm_prompt_use_biometric_auth">Authentification biométrique</string>
     <string name="pwm_prompt_continue_with_biometry">Continuez pour vous authentifier par empreinte ou par reconnaissance faciale.</string>
     <string name="pwm_prompt_cancel">Annuler</string>

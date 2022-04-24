@@ -3,6 +3,7 @@
     <string name="pwm_prompt_title">Si prega di inserire la password principale</string>
     <string name="pwm_prompt_subtitle">Per continuare è necessaria la tua password principale.</string>
     <string name="pwm_prompt_wrong_password">Password errata. Riprova.</string>
+    <string name="pwm_prompt_recreate">L\'autenticazione biometrica deve essere riattivata.</string>
     <string name="pwm_prompt_use_biometric_auth">Usa l\'autenticazione biometrica</string>
     <string name="pwm_prompt_continue_with_biometry">Continua ad autenticarti utilizzando l\'impronta digitale o il riconoscimento facciale</string>
     <string name="pwm_prompt_cancel">Annulla</string>

@@ -3,6 +3,7 @@
     <string name="pwm_prompt_title">Please enter your master password</string>
     <string name="pwm_prompt_subtitle">Your master password is required to continue.</string>
     <string name="pwm_prompt_wrong_password">Sorry, try again.</string>
+    <string name="pwm_prompt_recreate">Biometric authentication needs to be reactivated.</string>
     <string name="pwm_prompt_use_biometric_auth">Use biometric authentication</string>
     <string name="pwm_prompt_continue_with_biometry">Continue to authenticate using fingerprint or face recognition</string>
     <string name="pwm_prompt_cancel">Cancel</string>

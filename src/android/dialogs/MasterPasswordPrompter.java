@@ -57,6 +57,7 @@ public class MasterPasswordPrompter extends AlertDialog {
         TextView lblTitle;
         TextView lblIntro;
         TextView lblWrongPassword;
+        TextView lblRecreate;
         EditText etPassword;
         Button btCancel;
         Button btNext;
@@ -93,7 +94,7 @@ public class MasterPasswordPrompter extends AlertDialog {
             return this;
         }
 
-        public Builder prompt(boolean passwordWasWrong) {
+        public Builder prompt(boolean passwordWasWrong, boolean reCreate) {
             View view = LayoutInflater.from(this.activity).inflate(fakeR.getId("layout", "dialog_password_manager_prompt"), null);
 
             // Hook UI items
@@ -102,6 +103,7 @@ public class MasterPasswordPrompter extends AlertDialog {
             lblTitle = view.findViewById(fakeR.getId("id", "lblTitle"));
             lblIntro = view.findViewById(fakeR.getId("id", "lblIntro"));
             lblWrongPassword = view.findViewById(fakeR.getId("id", "lblWrongPassword"));
+            lblRecreate = view.findViewById(fakeR.getId("id", "lblRecreate"));
             etPassword = view.findViewById(fakeR.getId("id", "etPassword"));
             btCancel = view.findViewById(fakeR.getId("id", "btCancel"));
             btNext = view.findViewById(fakeR.getId("id", "btNext"));
@@ -125,10 +127,18 @@ public class MasterPasswordPrompter extends AlertDialog {
             etPassword.setHintTextColor(UIStyling.popupInputHintTextColor);
             lblBiometricIntro.setTextColor(UIStyling.popupMainTextColor);
 
-            if (passwordWasWrong)
-                lblWrongPassword.setVisibility(View.VISIBLE);
-            else
+            if (reCreate) {
+                // After adding a new fingerprint, a KeyPermanentlyInvalidatedException occurs.
+                lblRecreate.setVisibility(View.VISIBLE);
                 lblWrongPassword.setVisibility(View.GONE);
+            }
+            else {
+                lblRecreate.setVisibility(View.GONE);
+                if (passwordWasWrong)
+                    lblWrongPassword.setVisibility(View.VISIBLE);
+                else
+                    lblWrongPassword.setVisibility(View.GONE);
+            }
 
             btCancel.setOnClickListener(v -> {
                 cancel();
@@ -174,7 +184,11 @@ public class MasterPasswordPrompter extends AlertDialog {
                 }
             });
 
-            swBiometric.setChecked(passwordManager.isBiometricAuthEnabled(did));
+            if (reCreate) {
+                swBiometric.setChecked(true);
+            } else {
+                swBiometric.setChecked(passwordManager.isBiometricAuthEnabled(did));
+            }
 
             // If biometric auth is not enabled, we will follow the flow to initiate it during this prompter session.
             shouldInitiateBiometry = !passwordManager.isBiometricAuthEnabled(did);

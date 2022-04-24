@@ -201,7 +201,7 @@ public class PasswordManager {
                     public void onError(String error) {
                         listener.onError(error);
                     }
-                }, false, options.forceMasterPasswordPrompt);
+                }, false, options.forceMasterPasswordPrompt, false);
             }
 
             @Override
@@ -421,10 +421,10 @@ public class PasswordManager {
     }
 
     private void loadDatabase(String did, OnDatabaseLoadedListener listener, boolean isPasswordRetry) {
-        loadDatabase(did, listener, isPasswordRetry, false);
+        loadDatabase(did, listener, isPasswordRetry, false, false);
     }
 
-    private void loadDatabase(String did, OnDatabaseLoadedListener listener, boolean isPasswordRetry, boolean forcePasswordPrompt) {
+    private void loadDatabase(String did, OnDatabaseLoadedListener listener, boolean isPasswordRetry, boolean forcePasswordPrompt, boolean reCreate) {
         try {
             if (isDatabaseLoaded(did) && !sessionExpired(did) && !forcePasswordPrompt) {
                 listener.onDatabaseLoaded();
@@ -485,7 +485,7 @@ public class PasswordManager {
                             } catch (Exception e) {
                                 // In case of wrong password exception, try again
                                 if (e.getMessage().contains("BAD_DECRYPT")) {
-                                    loadDatabase(did, listener, true, forcePasswordPrompt);
+                                    loadDatabase(did, listener, true, forcePasswordPrompt, false);
                                 } else {
                                     // Other exceptions are passed raw
                                     listener.onError(e.getMessage());
@@ -498,9 +498,15 @@ public class PasswordManager {
                         })
                         .setOnErrorListener((err) -> {
                             activeMasterPasswordPrompt = null;
-                            listener.onError(err);
+                            // After adding a new fingerprint, a KeyPermanentlyInvalidatedException occurs.
+                            if (err.contains("Key Permanently Invalidated")) {
+                                setBiometricAuthEnabled(did,false);
+                                loadDatabase(did, listener, true, forcePasswordPrompt, true);
+                            } else {
+                                listener.onError(err);
+                            }
                         })
-                        .prompt(isPasswordRetry);
+                        .prompt(isPasswordRetry, reCreate);
             }
         }
         catch (Exception e) {
