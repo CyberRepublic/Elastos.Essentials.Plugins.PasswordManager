@@ -453,9 +453,13 @@ public class PasswordManager {
             }
 
             prompterController.setOnErrorListener { error in
-                self.activeMasterPasswordPrompt!.dismiss()
-                self.activeMasterPasswordPrompt = nil
-                onError(error)
+                if (error.contains("BIOMETRIC_AUTHENTICATION_FAILED")) {
+                    self.loadDatabase(did: did, onDatabaseLoaded: onDatabaseLoaded, onCancel: onCancel, onError: onError, isPasswordRetry: true, forcePasswordPrompt: forcePasswordPrompt)
+                } else {
+                    self.activeMasterPasswordPrompt!.dismiss()
+                    self.activeMasterPasswordPrompt = nil
+                    onError(error)
+                }
             }
         }
     }

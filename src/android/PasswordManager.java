@@ -468,10 +468,16 @@ public class PasswordManager {
 
                                                     @Override
                                                     public void onFailure(String message) {
-                                                        // Biometric save failed, but we still could open the database, so we return a success here.
-                                                        // Though, we don't save user's choice to enable biometric auth.
                                                         Log.e(LOG_TAG, "Biometric authentication failed to initiate");
                                                         Log.e(LOG_TAG, message);
+
+                                                        // In case of authentication failed, try again
+                                                        if (message.contains("Authentication failed")) {
+                                                            setBiometricAuthEnabled(did, false);
+                                                        }
+
+                                                        // Biometric save failed, but we still could open the database, so we return a success here.
+                                                        // Though, we don't save user's choice to enable biometric auth.
                                                         listener.onDatabaseLoaded();
                                                     }
                                                 });
@@ -502,6 +508,8 @@ public class PasswordManager {
                             if (err.contains("Key Permanently Invalidated")) {
                                 setBiometricAuthEnabled(did,false);
                                 loadDatabase(did, listener, true, forcePasswordPrompt, true);
+                            } else if (err.contains("Authentication failed")) {
+                                loadDatabase(did, listener, true, forcePasswordPrompt, false);
                             } else {
                                 listener.onError(err);
                             }
