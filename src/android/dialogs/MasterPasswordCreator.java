@@ -17,6 +17,8 @@ import org.elastos.essentials.plugins.passwordmanager.FakeR;
 import org.elastos.essentials.plugins.passwordmanager.PasswordManager;
 import org.elastos.essentials.plugins.passwordmanager.UIStyling;
 
+import static android.view.inputmethod.EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING;
+
 public class MasterPasswordCreator extends AlertDialog {
     public interface OnCancelClickedListener {
         void onCancelClicked();
@@ -111,8 +113,10 @@ public class MasterPasswordCreator extends AlertDialog {
             btNext.setTextColor(UIStyling.popupMainTextColor);
             etPassword.setTextColor(UIStyling.popupMainTextColor);
             etPassword.setHintTextColor(UIStyling.popupInputHintTextColor);
+            etPassword.setImeOptions(IME_FLAG_NO_PERSONALIZED_LEARNING);
             etPasswordRepeat.setTextColor(UIStyling.popupMainTextColor);
             etPasswordRepeat.setHintTextColor(UIStyling.popupInputHintTextColor);
+            etPasswordRepeat.setImeOptions(IME_FLAG_NO_PERSONALIZED_LEARNING);
 
             lblWrongPassword.setVisibility(View.GONE);
 

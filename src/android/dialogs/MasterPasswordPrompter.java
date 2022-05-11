@@ -23,6 +23,8 @@ import org.elastos.essentials.plugins.passwordmanager.PasswordManager;
 import org.elastos.essentials.plugins.passwordmanager.UIStyling;
 import org.elastos.essentials.plugins.fingerprint.FingerPrintAuthHelper;
 
+import static android.view.inputmethod.EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING;
+
 public class MasterPasswordPrompter extends AlertDialog {
     public interface OnCancelClickedListener {
         void onCancelClicked();
@@ -125,6 +127,7 @@ public class MasterPasswordPrompter extends AlertDialog {
             swBiometric.setTextColor(UIStyling.popupMainTextColor);
             etPassword.setTextColor(UIStyling.popupMainTextColor);
             etPassword.setHintTextColor(UIStyling.popupInputHintTextColor);
+            etPassword.setImeOptions(IME_FLAG_NO_PERSONALIZED_LEARNING);
             lblBiometricIntro.setTextColor(UIStyling.popupMainTextColor);
 
             if (reCreate) {
