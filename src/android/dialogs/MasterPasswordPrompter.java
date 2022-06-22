@@ -122,8 +122,10 @@ public class MasterPasswordPrompter extends AlertDialog {
             lblIntro.setTextColor(UIStyling.popupMainTextColor);
             cardDeny.setCardBackgroundColor(UIStyling.popupSecondaryBackgroundColor);
             btCancel.setTextColor(UIStyling.popupMainTextColor);
+            btCancel.setBackgroundColor(UIStyling.popupSecondaryBackgroundColor);
             cardAccept.setCardBackgroundColor(UIStyling.popupSecondaryBackgroundColor);
             btNext.setTextColor(UIStyling.popupMainTextColor);
+            btNext.setBackgroundColor(UIStyling.popupSecondaryBackgroundColor);
             swBiometric.setTextColor(UIStyling.popupMainTextColor);
             etPassword.setTextColor(UIStyling.popupMainTextColor);
             etPassword.setHintTextColor(UIStyling.popupInputHintTextColor);
