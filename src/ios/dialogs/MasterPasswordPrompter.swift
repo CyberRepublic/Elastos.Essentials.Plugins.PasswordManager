@@ -199,7 +199,10 @@ class MasterPasswordPrompterAlertController: UIViewController {
         print(sender.isOn)
 
         if (sender.isOn) {
+            shouldInitiateBiometry = !passwordManager!.isBiometricAuthEnabled(did: did!)
             // Willing to enable biometric auth?
+
+            setTextPasswordVisible(shouldInitiateBiometry)
         }
         else {
             // Willing to disable biometric auth?

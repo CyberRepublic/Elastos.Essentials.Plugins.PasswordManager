@@ -189,14 +189,16 @@ public class MasterPasswordPrompter extends AlertDialog {
                 }
             });
 
+            Boolean biometricAuthEnabled = passwordManager.isBiometricAuthEnabled(did);
+
             if (reCreate) {
                 swBiometric.setChecked(true);
             } else {
-                swBiometric.setChecked(passwordManager.isBiometricAuthEnabled(did));
+                swBiometric.setChecked(biometricAuthEnabled);
             }
 
             // If biometric auth is not enabled, we will follow the flow to initiate it during this prompter session.
-            shouldInitiateBiometry = !passwordManager.isBiometricAuthEnabled(did);
+            shouldInitiateBiometry = !biometricAuthEnabled;
 
             if (canUseBiometrictAuth()) {
                 if (shouldInitiateBiometry) {
@@ -211,8 +213,11 @@ public class MasterPasswordPrompter extends AlertDialog {
 
                 swBiometric.setOnCheckedChangeListener((compoundButton, checked) -> {
                     if (checked) {
+                        shouldInitiateBiometry = !passwordManager.isBiometricAuthEnabled(did);
+
                         // Willing to enable biometric auth?
-                        setBiometryLayoutVisible(false);
+                        setBiometryLayoutVisible(!shouldInitiateBiometry);
+                        setTextPasswordVisible(shouldInitiateBiometry);
                         updateBiometryIntroText();
                     }
                     else {
